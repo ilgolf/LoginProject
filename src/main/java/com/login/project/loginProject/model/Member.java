@@ -19,7 +19,7 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 20, nullable = false, unique = true, name = "nickname")
+    @Column(length = 20, nullable = false, unique = true)
     private String username;
 
     @Column(length = 120, nullable = false, unique = true)
@@ -34,6 +34,10 @@ public class Member {
 
     @UpdateTimestamp
     private Timestamp updateDate;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     @Builder
     public Member(long id, String username, String password, String email) {
