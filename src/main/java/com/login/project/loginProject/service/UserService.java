@@ -12,6 +12,20 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Member login(Member member) {
-        return userRepository.findById(member.getId()).orElseGet(Member::new); // 지렸다. 이게 인텔리제이인가 가슴이 웅장해진다.
+        return userRepository.findById(member.getId()).orElseGet(Member::new);
+    }
+
+    public Long join(Member member) {
+
+        validateMember(member);
+        userRepository.save(member);
+        return member.getId();
+    }
+
+    private void validateMember(Member member) {
+        userRepository.findByUsername(member.getUsername())
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                });
     }
 }
