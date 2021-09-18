@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/?useUnicode=true&serverTimezone=UTC
+    username: cos
+    password: cos1234
