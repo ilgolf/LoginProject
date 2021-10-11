@@ -15,11 +15,9 @@ public class UserService {
         return userRepository.findById(member.getId()).orElseGet(Member::new);
     }
 
-    public Long join(Member member) {
-
+    public void join(Member member) {
         validateMember(member);
         userRepository.save(member);
-        return member.getId();
     }
 
     private void validateMember(Member member) {
@@ -27,5 +25,13 @@ public class UserService {
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 회원입니다.");
                 });
+    }
+
+    public void modify(Member member) {
+        Member persistance = userRepository.findById(member.getId()).orElseThrow(IllegalArgumentException::new);
+
+        persistance.setUsername(member.getUsername());
+        persistance.setPassword(member.getPassword());
+        persistance.setEmail(member.getEmail());
     }
 }
