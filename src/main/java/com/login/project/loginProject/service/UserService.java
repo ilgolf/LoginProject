@@ -16,7 +16,6 @@ public class UserService {
     }
 
     public void join(Member member) {
-
         validateMember(member);
         userRepository.save(member);
     }

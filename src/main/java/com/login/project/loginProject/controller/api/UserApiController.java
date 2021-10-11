@@ -20,14 +20,12 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody Member member, HttpServletRequest request,
-                        HttpServletResponse response, RedirectAttributes attributes) {
+    public String login(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        member = userService.login(member);
+        Member member1 = userService.login(member);
+        String username = member1.getUsername();
 
-        if (member == null) {
-            throw new IllegalStateException("아직 회원 가입 안하셨습니다.");
-        }
+        session.setAttribute(username, member1);
 
         return "redirect:/";
     }
