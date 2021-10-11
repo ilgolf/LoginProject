@@ -1,12 +1,14 @@
 package com.login.project.loginProject.controller.api;
 
+import com.login.project.loginProject.dto.MemberDTO;
 import com.login.project.loginProject.model.Member;
 import com.login.project.loginProject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,20 +21,18 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody Member member, HttpServletRequest request,
-                        HttpServletResponse response, RedirectAttributes attributes) {
+    public MemberDTO<Integer> login(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        member = userService.login(member);
+        Member member1 = userService.login(member);
+        String username = member1.getUsername();
 
-        if (member == null) {
-            throw new IllegalStateException("아직 회원 가입 안하셨습니다.");
-        }
+        session.setAttribute(username, member1);
 
-        return "redirect:/";
+        return new MemberDTO<>(HttpStatus.OK.value(), 1);
     }
 
     @PostMapping("/join")
-    public String save(@RequestBody Member member) {
+    public MemberDTO<Integer> save(@RequestBody Member member) {
         Member user = Member.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
@@ -41,6 +41,16 @@ public class UserApiController {
 
         userService.join(user);
 
-        return "redirect:/";
+        return new MemberDTO<>(HttpStatus.OK.value(), 1);
+    }
+
+    @PutMapping("/update")
+    public MemberDTO<Integer> update(@RequestBody Member member, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        userService.modify(member);
+
+        session.setAttribute(member.getUsername(), member);
+
+        return new MemberDTO<>(HttpStatus.OK.value(), 1);
     }
 }
