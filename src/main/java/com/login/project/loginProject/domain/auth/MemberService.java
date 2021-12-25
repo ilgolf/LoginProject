@@ -19,7 +19,7 @@ public class MemberService {
 
    // 회원 정보
    @Transactional(readOnly = true)
-   public Member member(Long id) {
+   public Member lookup(Long id) {
       log.info("{} : 조회 성공!", id);
       return memberRepository.findById(id).orElseGet(Member::new);
    }
