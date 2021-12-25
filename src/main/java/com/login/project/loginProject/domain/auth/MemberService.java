@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
-   private MemberRepository memberRepository;
+   private final MemberRepository memberRepository;
 
    // 회원 정보
    @Transactional(readOnly = true)
