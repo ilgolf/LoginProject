@@ -1,6 +1,6 @@
 # LoginProject
 
-## 프로젝트 시작 이유 
+## 프로젝트 시작 이유
 
 무작정 Security로 로그인을 구현하다 정작 Session관리나 스프링에서 순수 코드로 작성 시 어떤 로직으로 작성될까 하는 호기심으로 시작했습니다.
 또한 Session관리를 했을 때 Security가 왜 필요한지에 대한 의문이 들어 직접 경험해 보고싶어 시작한 프로젝트 입니다.
@@ -9,14 +9,11 @@
 
 ```java
 @PostMapping("/login")
-    public String login(@RequestBody Member member, HttpServletRequest request,
-                        HttpServletResponse response, RedirectAttributes attributes) {
+    public String login(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         member = userService.login(member);
 
-        if (member == null) {
-            throw new IllegalStateException("아직 회원 가입 안하셨습니다.");
-        }
+        session.setAttribute("user", member);
 
         return "redirect:/";
     }
@@ -39,6 +36,5 @@
   인식해서 새로운 Session이 생성됩니다.
 - 사용자가 로그인 했는지, 닉네임 등의 사용자가 요청할 때 마다 필요한 정보들을 Session에 담아두면 사용자
   DB에 접근할 필요가 없어 효율적입니다.
-  
-  
+
   ref - https://cjh5414.github.io/cookie-and-session/
