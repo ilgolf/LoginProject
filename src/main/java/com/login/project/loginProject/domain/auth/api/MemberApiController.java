@@ -3,6 +3,7 @@ package com.login.project.loginProject.domain.auth.api;
 import com.login.project.loginProject.domain.auth.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.dto.MemberDTO;
+import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +31,13 @@ public class MemberApiController {
     public ResponseEntity<Member> register(@Valid @RequestBody MemberDTO memberDTO) throws DuplicateMemberException {
         log.info("{} : 로그인 성공", memberDTO.getEmail());
         return ResponseEntity.ok(memberService.signUp(memberDTO));
+    }
+
+    @PutMapping("/{memberId}")
+    public ResponseEntity<Member> update(@PathVariable Long memberId,
+                                         @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
+        log.info("{} : 회원 수정", updateDTO.getEmail());
+
+        return ResponseEntity.ok(memberService.updateMember(memberId, updateDTO));
     }
 }

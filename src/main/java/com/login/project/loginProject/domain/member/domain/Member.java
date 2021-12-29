@@ -23,17 +23,36 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private RoleType roleType;
 
+    @Column(unique = true, length = 20)
+    private String nickName;
+
     @Column(length = 10)
     private String name;
 
     private int age;
 
     @Builder
-    public Member(String email, String password, RoleType roleType, String name, int age) {
+    public Member(String email, String password, RoleType roleType, String nickName, String name, int age) {
         this.email = email;
         this.password = password;
         this.roleType = roleType;
         this.name = name;
+        this.nickName = nickName;
         this.age = age;
+    }
+
+    public Member updateEmail(final String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Member updatePassword(final String password) {
+        this.password = password;
+        return this;
+    }
+
+    public Member updateNickName(final String nickName) {
+        this.nickName = nickName;
+        return this;
     }
 }
