@@ -27,5 +27,9 @@ public class MemberDTO {
     private String name;
 
     @NotNull
+    @Size(min = 4, max = 20)
+    private String nickName;
+
+    @NotNull
     private int age;
 }
