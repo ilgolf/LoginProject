@@ -40,4 +40,5 @@
 - 사용자가 로그인 했는지, 닉네임 등의 사용자가 요청할 때 마다 필요한 정보들을 Session에 담아두면 사용자
   DB에 접근할 필요가 없어 효율적입니다.
   
+  
   ref - https://cjh5414.github.io/cookie-and-session/
