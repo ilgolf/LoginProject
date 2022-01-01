@@ -2,39 +2,70 @@
 
 ## 프로젝트 시작 이유
 
-무작정 Security로 로그인을 구현하다 정작 Session관리나 스프링에서 순수 코드로 작성 시 어떤 로직으로 작성될까 하는 호기심으로 시작했습니다.
-또한 Session관리를 했을 때 Security가 왜 필요한지에 대한 의문이 들어 직접 경험해 보고싶어 시작한 프로젝트 입니다.
+아무생각 없이 api를 만들게 되고 기능 구현에만 목적을 둔 개발을 멈추고 싶었습니다. 그래서 
+본 프로젝트에서는 불필요한 부분을 걷어내고 효과 적인 코드를 짜는데 집중하고 ,생각 없는 
+RestAPI 규약을 이해하고 RestFul한 설계를 경험하기 위해 시작했습니다.
 
-## 로그인 API
+## RestAPI 설계
+
+- Create
+  - path : /members/join
+  - RequestMethod : Post
+  - Success status : 200 OK
+  - fail status : 4xx error, 5xx error
+
+
+- Read
+  - path : /members/{id}
+  - RequestMethod : Get
+  - Success status : 200 OK
+  - fail status : 4xx error, 5xx error
+
+
+- Update
+  - path : /members/{id}
+  - RequestMethod : Put
+  - Success status : 200 OK
+  - fail status : 4xx error, 5xx error
+
+
+- Delete
+  - path : /members/{id}
+  - RequestMethod : Delete
+  - Success status : 200 OK
+  - fail status : 4xx error, 5xx error
+
+## 회원가입 API
 
 ```java
-@PostMapping("/login")
-    public String login(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        member = userService.login(member);
-
-        session.setAttribute("user", member);
-
-        return "redirect:/";
+public class MemberService {
+  
+    public Member signUp(MemberDTO memberDTO) throws DuplicateMemberException {
+    if (memberRepository.findByEmail(memberDTO.getEmail()).orElse(null) != null) {
+      throw new DuplicateMemberException("이미 가입된 정보입니다.");
     }
+
+    Member member = Member.builder()
+            .email(memberDTO.getEmail())
+            .password(memberDTO.getPassword())
+            .name(memberDTO.getName())
+            .nickName(memberDTO.getNickName())
+            .age(memberDTO.getAge())
+            .roleType(RoleType.USER)
+            .build();
+
+    memberRepository.save(member);
+
+    return member;
+  }
+}
 ```
 
-### Session의 동작 순서
+회원가입 시에 member 필드에 많으 속성들이 담겨 있기 때문에 Builder 패턴을 이용하여 
+구현하였다. 이렇게 되면 생성자 인자를 사용하였을 때보다 깔끔하게 확실히 넣어야 할 인자를
+넣을 수 있게 되고 
 
-1. 클라이언트가 서버에 요청을 보냄
-2. 서버에서는 session id 쿠키 값이 없는 것을 확인하고 새로 발급해서 응답
-3. 이후 클라이언트는 전달 받은 session id 값을 매 요청마다 헤더 쿠키에 넣어서 요청
-4. 서버는 session id를 확인하여 사용자를 식별
-5. 클라이언트가 로그인을 요청하면 서버는 session을 로그인한 사용자 정보로 갱신하고 새로운 session id를 발급하여 응답
-6. 이후 클라이언트는 로그인 사용자의 session id 쿠키를 요청과 함께 전달하고 서버에서 로그인된 사용자로 식별 가능
-7. 클라이언트 종료 (브라우저 종료)시 session id 제거, 서버에서도 세션 제거
+setter를 사용하면 1회의 메서드 호출로 끝낼 수 없을 뿐더러 이것이 set으로만 표현되니 
+직접 개발한 개발자가 아니라면 이 메서드를 왜 호출했는지 햇갈릴 수 있다. 그렇기에 빌더
+패턴을 이용해 표현하였다.
 
-### Session의 특징
-
-- Session id는 브라우저 단위로 저장되고 브라우저 종료 시 소멸됩니다.
-- 로그인한 사용자에 대해서만 Session을 생성하는 것이 아닙니다. 따라서 로그아웃하면 새로운 사용자로
-  인식해서 새로운 Session이 생성됩니다.
-- 사용자가 로그인 했는지, 닉네임 등의 사용자가 요청할 때 마다 필요한 정보들을 Session에 담아두면 사용자
-  DB에 접근할 필요가 없어 효율적입니다.
-
-  ref - https://cjh5414.github.io/cookie-and-session/
