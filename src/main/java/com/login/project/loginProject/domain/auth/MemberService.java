@@ -47,11 +47,15 @@ public class MemberService {
     }
 
     public Member updateMember(Long memberId, MemberUpdateDTO updateDTO) throws DuplicateMemberException {
-        if (memberRepository.findByEmail(updateDTO.getEmail()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입된 정보입니다.");
+        if (memberRepository.existsByEmail(updateDTO.getEmail())) {
+            throw new DuplicateMemberException("이메일이 이미 존재 합니다.");
         }
 
-        Member member = memberRepository.findOne(memberId);
+        if (memberRepository.existsByNickName(updateDTO.getNickName())) {
+            throw new DuplicateMemberException("닉네임이 이미 존재 합니다.");
+        }
+
+        Member member = memberRepository.findById(memberId).orElseGet(Member::new);
 
         member.updateEmail(updateDTO.getEmail());
         member.updatePassword(updateDTO.getPassword());
