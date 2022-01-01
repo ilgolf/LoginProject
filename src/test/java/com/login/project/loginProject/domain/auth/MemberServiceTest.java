@@ -6,6 +6,7 @@ import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +34,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("회원 조회 테스트")
     void readMember() {
         // given
         givenMember = Member.builder()
@@ -54,6 +56,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("회원 수정 테스트")
     void updateMember() throws DuplicateMemberException {
         // given
         givenMember = Member.builder()
