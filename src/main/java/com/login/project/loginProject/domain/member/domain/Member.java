@@ -41,15 +41,17 @@ public class Member {
         this.age = age;
     }
 
-    public void updateEmail(final String email) {
-        this.email = email;
-    }
+    private void changeEmail(final String email) { this.email = email; }
 
-    public void updatePassword(final String password) {
-        this.password = password;
-    }
+    private void changePassword(final String password) { this.password = password; }
 
-    public void updateNickName(final String nickName) {
-        this.nickName = nickName;
+    private void changeNickName(final String nickName) { this.nickName = nickName; }
+
+    public Member update(final String email, final String password, final String nickName) {
+        changeEmail(email);
+        changePassword(password);
+        changeNickName(nickName);
+
+        return this;
     }
 }
