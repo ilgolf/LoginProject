@@ -3,6 +3,7 @@ package com.login.project.loginProject.domain.auth;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
+import com.login.project.loginProject.domain.member.dto.LoginDTO;
 import com.login.project.loginProject.domain.member.dto.MemberDTO;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
@@ -47,20 +48,24 @@ public class MemberService {
     }
 
     public Member updateMember(Long memberId, MemberUpdateDTO updateDTO) throws DuplicateMemberException {
-        if (memberRepository.existsByEmail(updateDTO.getEmail())) {
+        if (checkDuplicateEmail(updateDTO.getEmail())) {
             throw new DuplicateMemberException("이메일이 이미 존재 합니다.");
         }
 
-        if (memberRepository.existsByNickName(updateDTO.getNickName())) {
+        if (checkDuplicateNickName(updateDTO.getNickName())) {
             throw new DuplicateMemberException("닉네임이 이미 존재 합니다.");
         }
 
         Member member = memberRepository.findById(memberId).orElseGet(Member::new);
 
-        member.updateEmail(updateDTO.getEmail());
-        member.updatePassword(updateDTO.getPassword());
-        member.updateNickName(updateDTO.getNickName());
+        return member.update(updateDTO.getEmail(), updateDTO.getPassword(), updateDTO.getNickName());
+    }
 
-        return member;
+    private boolean checkDuplicateEmail(String valid) {
+        return memberRepository.existsByEmail(valid);
+    }
+
+    private boolean checkDuplicateNickName(String valid) {
+        return memberRepository.existsByNickName(valid);
     }
 }

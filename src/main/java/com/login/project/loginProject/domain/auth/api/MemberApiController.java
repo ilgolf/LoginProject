@@ -2,6 +2,7 @@ package com.login.project.loginProject.domain.auth.api;
 
 import com.login.project.loginProject.domain.auth.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
+import com.login.project.loginProject.domain.member.dto.LoginDTO;
 import com.login.project.loginProject.domain.member.dto.MemberDTO;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
