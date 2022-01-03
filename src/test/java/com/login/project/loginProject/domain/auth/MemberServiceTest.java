@@ -3,6 +3,7 @@ package com.login.project.loginProject.domain.auth;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
+import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import org.junit.jupiter.api.AfterEach;
@@ -48,7 +49,9 @@ class MemberServiceTest {
         Member member = givenInfo();
 
         // when
-        Member newMember = memberService.lookup(member.getId());
+        MemberResponse response = memberService.lookup(member.getId());
+
+        Member newMember = memberRepository.findByEmail(response.getEmail()).orElseGet(Member::new);
 
         // then
         assertThat(newMember.getEmail()).isEqualTo("ilgolc@naver.com");
@@ -75,7 +78,9 @@ class MemberServiceTest {
         updateDTO.setNickName("Dev.Golf");
 
         // when
-        Member member = memberService.updateMember(savedMember.getId(), updateDTO);
+        MemberResponse memberResponse = memberService.updateMember(savedMember.getId(), updateDTO);
+
+        Member member = memberRepository.findByEmail(memberResponse.getEmail()).orElseGet(Member::new);
 
         // then
         assertThat(member.getEmail()).isEqualTo("ssar@naver.com");

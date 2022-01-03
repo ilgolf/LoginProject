@@ -5,6 +5,7 @@ import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.LoginDTO;
 import com.login.project.loginProject.domain.member.dto.MemberDTO;
+import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,15 @@ public class MemberService {
 
     // 회원 정보
     @Transactional(readOnly = true)
-    public Member lookup(Long id) {
+    public MemberResponse lookup(Long id) {
         log.info("{} : 조회 성공!", id);
-        return memberRepository.findById(id).orElseGet(Member::new);
+        Member member = memberRepository.findById(id).orElseGet(Member::new);
+
+        return new MemberResponse(member);
     }
 
     // 회원 가입
-    public Member signUp(MemberDTO memberDTO) throws DuplicateMemberException {
+    public MemberResponse signUp(MemberDTO memberDTO) throws DuplicateMemberException {
         if (memberRepository.findByEmail(memberDTO.getEmail()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입된 정보입니다.");
         }
@@ -44,10 +47,10 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return member;
+        return new MemberResponse(member);
     }
 
-    public Member updateMember(Long memberId, MemberUpdateDTO updateDTO) throws DuplicateMemberException {
+    public MemberResponse updateMember(Long memberId, MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         if (checkDuplicateEmail(updateDTO.getEmail())) {
             throw new DuplicateMemberException("이메일이 이미 존재 합니다.");
         }
@@ -60,7 +63,7 @@ public class MemberService {
 
         member.update(updateDTO.getEmail(), updateDTO.getPassword(), updateDTO.getNickName());
 
-        return member;
+        return new MemberResponse(member);
     }
 
     private boolean checkDuplicateEmail(String valid) {
