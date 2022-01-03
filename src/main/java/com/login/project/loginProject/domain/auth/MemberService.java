@@ -58,7 +58,9 @@ public class MemberService {
 
         Member member = memberRepository.findById(memberId).orElseGet(Member::new);
 
-        return member.update(updateDTO.getEmail(), updateDTO.getPassword(), updateDTO.getNickName());
+        member.update(updateDTO.getEmail(), updateDTO.getPassword(), updateDTO.getNickName());
+
+        return member;
     }
 
     private boolean checkDuplicateEmail(String valid) {

@@ -47,11 +47,9 @@ public class Member {
 
     private void changeNickName(final String nickName) { this.nickName = nickName; }
 
-    public Member update(final String email, final String password, final String nickName) {
+    public void update(final String email, final String password, final String nickName) {
         changeEmail(email);
         changePassword(password);
         changeNickName(nickName);
-
-        return this;
     }
 }
