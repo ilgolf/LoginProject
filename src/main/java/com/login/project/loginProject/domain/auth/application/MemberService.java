@@ -1,9 +1,8 @@
-package com.login.project.loginProject.domain.auth.service;
+package com.login.project.loginProject.domain.auth.application;
 
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
-import com.login.project.loginProject.domain.member.dto.LoginDTO;
 import com.login.project.loginProject.domain.member.dto.MemberDTO;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
