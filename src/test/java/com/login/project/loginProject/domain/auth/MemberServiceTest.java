@@ -1,5 +1,6 @@
 package com.login.project.loginProject.domain.auth;
 
+import com.login.project.loginProject.domain.auth.service.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -21,7 +21,8 @@ import static org.assertj.core.api.Assertions.*;
 class MemberServiceTest {
 
     @Autowired MemberRepository memberRepository;
-    @Autowired MemberService memberService;
+    @Autowired
+    MemberService memberService;
 
     private static Member givenMember;
 
