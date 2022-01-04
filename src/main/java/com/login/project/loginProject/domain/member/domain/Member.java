@@ -1,5 +1,6 @@
 package com.login.project.loginProject.domain.member.domain;
 
+import com.login.project.loginProject.global.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -40,6 +41,10 @@ public class Member {
         this.nickName = nickName;
         this.age = age;
     }
+
+    /**
+     * 비즈 니스 로직
+     */
 
     private void changeEmail(final String email) { this.email = email; }
 
