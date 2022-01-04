@@ -1,8 +1,10 @@
 package com.login.project.loginProject.domain.auth;
 
+import com.login.project.loginProject.domain.auth.service.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
+import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -20,7 +21,8 @@ import static org.assertj.core.api.Assertions.*;
 class MemberServiceTest {
 
     @Autowired MemberRepository memberRepository;
-    @Autowired MemberService memberService;
+    @Autowired
+    MemberService memberService;
 
     private static Member givenMember;
 
@@ -48,7 +50,9 @@ class MemberServiceTest {
         Member member = givenInfo();
 
         // when
-        Member newMember = memberService.lookup(member.getId());
+        MemberResponse response = memberService.lookup(member.getId());
+
+        Member newMember = memberRepository.findByEmail(response.getEmail()).orElseGet(Member::new);
 
         // then
         assertThat(newMember.getEmail()).isEqualTo("ilgolc@naver.com");
@@ -75,7 +79,9 @@ class MemberServiceTest {
         updateDTO.setNickName("Dev.Golf");
 
         // when
-        Member member = memberService.updateMember(savedMember.getId(), updateDTO);
+        MemberResponse memberResponse = memberService.updateMember(savedMember.getId(), updateDTO);
+
+        Member member = memberRepository.findByEmail(memberResponse.getEmail()).orElseGet(Member::new);
 
         // then
         assertThat(member.getEmail()).isEqualTo("ssar@naver.com");
