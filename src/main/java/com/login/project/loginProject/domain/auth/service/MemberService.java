@@ -1,4 +1,4 @@
-package com.login.project.loginProject.domain.auth;
+package com.login.project.loginProject.domain.auth.service;
 
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
