@@ -72,4 +72,8 @@ public class MemberService {
     private boolean checkDuplicateNickName(String valid) {
         return memberRepository.existsByNickName(valid);
     }
+
+    public void delete(final Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
 }

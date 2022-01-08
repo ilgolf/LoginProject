@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @RestController
@@ -22,7 +23,7 @@ public class MemberApiController {
 
     // 회원 정보 api
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> userInfo(@PathVariable Long id) {
+    public ResponseEntity<MemberResponse> lookup(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.lookup(id));
     }
 
@@ -38,5 +39,10 @@ public class MemberApiController {
                                          @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 수정", updateDTO.getEmail());
         return ResponseEntity.ok(memberService.updateMember(memberId, updateDTO));
+    }
+
+    @DeleteMapping("/{memberId}")
+    public void delete(@PathVariable @NotNull Long memberId) {
+        memberService.delete(memberId);
     }
 }
