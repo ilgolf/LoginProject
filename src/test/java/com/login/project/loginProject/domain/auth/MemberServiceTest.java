@@ -15,12 +15,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
     @Autowired
     MemberService memberService;
 
@@ -31,7 +33,7 @@ class MemberServiceTest {
         memberRepository.deleteAll();
     }
 
-    Member givenInfo() {
+    Member saveMember() {
         return memberRepository.save(givenMember);
     }
 
@@ -43,11 +45,12 @@ class MemberServiceTest {
                 .email("ilgolc@naver.com")
                 .password("1234")
                 .nickName("Golf")
+                .name("kim")
                 .roleType(RoleType.USER)
                 .age(26)
                 .build();
 
-        Member member = givenInfo();
+        Member member = saveMember();
 
         // when
         MemberResponse response = memberService.lookup(member.getId());
@@ -67,10 +70,11 @@ class MemberServiceTest {
                 .email("ilgolc@naver.com")
                 .password("1234")
                 .nickName("Golf")
+                .name("kim")
                 .roleType(RoleType.USER)
                 .age(26)
                 .build();
-        Member savedMember = givenInfo();
+        Member savedMember = saveMember();
 
         MemberUpdateDTO updateDTO = new MemberUpdateDTO();
 
@@ -87,5 +91,34 @@ class MemberServiceTest {
         assertThat(member.getEmail()).isEqualTo("ssar@naver.com");
         assertThat(member.getPassword()).isEqualTo("12345");
         assertThat(member.getNickName()).isEqualTo("Dev.Golf");
+    }
+
+    @Test
+    @DisplayName("회원 삭제 테스트")
+    void deleteTest() {
+        // given
+        givenMember = Member.builder()
+                .email("ilgolc@naver.com")
+                .password("1234")
+                .nickName("Golf")
+                .name("kim")
+                .roleType(RoleType.USER)
+                .age(26)
+                .build();
+
+        Member member = saveMember();
+
+        String userEmail = member.getEmail();
+
+        // when
+        memberService.delete(member.getId());
+
+        // then
+        assertThrows(IllegalArgumentException.class, () -> {
+                    memberRepository.findByEmail(userEmail).orElseThrow(
+                            () -> new IllegalArgumentException("잘못된 접근입니다.")
+                    );
+                }
+        );
     }
 }
