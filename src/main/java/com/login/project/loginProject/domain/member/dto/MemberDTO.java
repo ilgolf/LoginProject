@@ -1,5 +1,7 @@
 package com.login.project.loginProject.domain.member.dto;
 
+import com.login.project.loginProject.domain.member.domain.Member;
+import com.login.project.loginProject.domain.member.domain.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDTO {
@@ -32,5 +34,16 @@ public class MemberDTO {
     private String nickName;
 
     @NotBlank(message = "나이를 입력해주세요")
-    private int age;
+    private Integer age;
+
+    public Member toEntity() {
+        return Member.builder()
+                .email(email)
+                .password(password)
+                .name(name)
+                .roleType(RoleType.USER)
+                .nickName(nickName)
+                .age(age)
+                .build();
+    }
 }

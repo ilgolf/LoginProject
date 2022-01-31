@@ -19,7 +19,8 @@ public class PrincipalDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
         Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new EmailNotFoundException("해당 이메일을 찾을 수 없습니다. : " + email, ErrorCode.ENTITY_NOT_FOUND));
+                () -> new EmailNotFoundException(ErrorCode.EMAIL_DUPLICATION)
+        );
 
         return new PrincipalDetail(member);
     }

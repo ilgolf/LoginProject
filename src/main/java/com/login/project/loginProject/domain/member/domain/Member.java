@@ -37,13 +37,6 @@ public class Member extends BaseTimeEntity {
     @Builder
     public Member(String email, String password, RoleType roleType, String nickName, String name, Integer age) {
 
-        // 검증 로직
-        Assert.hasText(email, "이메일이 빠졌습니다.");
-        Assert.hasText(password, "비밀번호가 빠졌습니다.");
-        Assert.hasText(roleType.name(), "권한이 빠졌습니다.");
-        Assert.hasText(nickName, "닉네임이 빠졌습니다.");
-        Assert.hasText(name, "이름이 빠졌습니다.");
-
         this.email = email;
         this.password = password;
         this.roleType = roleType;
@@ -55,7 +48,7 @@ public class Member extends BaseTimeEntity {
     /**
      * 비즈 니스 로직
      */
-    public void update(final String email, final String password, final String nickName) {
+    public void update(final Member member) {
         changeEmail(email);
         changePassword(password);
         changeNickName(nickName);

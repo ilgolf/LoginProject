@@ -53,7 +53,7 @@ class MemberServiceTest {
         Member member = saveMember();
 
         // when
-        MemberResponse response = memberService.lookup(member.getId());
+        MemberResponse response = memberService.findById(member.getId());
 
         Member newMember = memberRepository.findByEmail(response.getEmail()).orElseGet(Member::new);
 
@@ -74,18 +74,19 @@ class MemberServiceTest {
                 .roleType(RoleType.USER)
                 .age(26)
                 .build();
+
         Member savedMember = saveMember();
 
-        MemberUpdateDTO updateDTO = new MemberUpdateDTO();
-
-        updateDTO.setEmail("ssar@naver.com");
-        updateDTO.setPassword("12345");
-        updateDTO.setNickName("Dev.Golf");
+        MemberUpdateDTO updateMember = MemberUpdateDTO.builder()
+                .email("ssar@naver.com")
+                .password("12345")
+                .nickName("Dev.Golf")
+                .build();
 
         // when
-        MemberResponse memberResponse = memberService.updateMember(savedMember.getId(), updateDTO);
+        Long updateId = memberService.updateMember(updateMember.toEntity(), savedMember.getId());
 
-        Member member = memberRepository.findByEmail(memberResponse.getEmail()).orElseGet(Member::new);
+        Member member = memberRepository.findById(updateId).orElseGet(Member::new);
 
         // then
         assertThat(member.getEmail()).isEqualTo("ssar@naver.com");

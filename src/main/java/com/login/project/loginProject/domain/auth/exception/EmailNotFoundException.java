@@ -5,7 +5,7 @@ import com.login.project.loginProject.global.error.exception.ErrorCode;
 
 public class EmailNotFoundException extends BusinessException {
 
-    public EmailNotFoundException(String message, ErrorCode errorCode) {
-        super(message, errorCode);
+    public EmailNotFoundException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }
