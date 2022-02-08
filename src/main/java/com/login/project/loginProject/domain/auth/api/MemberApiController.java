@@ -8,6 +8,7 @@ import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,14 +38,16 @@ public class MemberApiController {
     }
 
     @PutMapping("{memberId}")
-    public ResponseEntity<Long> update(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
+    public ResponseEntity<Void> update(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 수정", updateDTO.getEmail());
         Member member = updateDTO.toEntity();
-        return ResponseEntity.ok(memberService.updateMember(member, memberId));
+        memberService.updateMember(member, memberId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{memberId}")
-    public void delete(@PathVariable @NotNull Long memberId) {
+    public ResponseEntity<Void> delete(@PathVariable Long memberId) {
         memberService.delete(memberId);
+        return ResponseEntity.noContent().build();
     }
 }

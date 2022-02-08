@@ -1,9 +1,13 @@
 spring:
+  h2:
+    console:
+      enabled: true
+
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/login?useUnicode=true&serverTimezone=UTC
-    username: cos
-    password: cos1234
+    url: jdbc:h2:tcp://localhost/~/test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     open-in-view: false
@@ -11,15 +15,9 @@ spring:
       ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      use-new-id-generator-mappings: false
     show-sql: true
     properties:
-      hibernate.enable_lazy_load_no_trans: true
-      hibernate.format_sql: true
-
-  thymeleaf:
-    prefix: classpath:templates/
-    suffix: .html
-    cache: false
+      hibernate:
+        format_sql: true
 
 

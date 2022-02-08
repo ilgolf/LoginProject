@@ -4,12 +4,12 @@ import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
-import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import com.login.project.loginProject.domain.member.exception.MemberNotFoundException;
 import com.login.project.loginProject.global.error.exception.ErrorCode;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder encoder;
 
     // 회원 정보
     @Transactional(readOnly = true)
@@ -36,11 +37,14 @@ public class MemberService {
             throw new DuplicateMemberException("이미 가입된 정보입니다.");
         }
 
+        String rawPassword = requestMember.getPassword();
+        String encodePassword = encoder.encode(rawPassword);
+
         Member member = Member.builder()
                 .email(requestMember.getEmail())
-                .password(requestMember.getPassword())
+                .password(encodePassword)
                 .name(requestMember.getName())
-                .nickName(requestMember.getNickName())
+                .nickName(requestMember.getNickname())
                 .age(requestMember.getAge())
                 .roleType(RoleType.USER)
                 .build();
@@ -50,12 +54,12 @@ public class MemberService {
         return new MemberResponse(member);
     }
 
-    public Long updateMember(Member update, Long id) throws DuplicateMemberException {
+    public void updateMember(Member update, Long id) throws DuplicateMemberException {
         if (checkDuplicateEmail(update.getEmail())) {
             throw new DuplicateMemberException("이메일이 이미 존재 합니다.");
         }
 
-        if (checkDuplicateNickName(update.getNickName())) {
+        if (checkDuplicateNickName(update.getNickname())) {
             throw new DuplicateMemberException("닉네임이 이미 존재 합니다.");
         }
 
@@ -64,8 +68,6 @@ public class MemberService {
         });
 
         findMember.update(update);
-
-        return findMember.getId();
     }
 
     private boolean checkDuplicateEmail(String valid) {
@@ -73,7 +75,7 @@ public class MemberService {
     }
 
     private boolean checkDuplicateNickName(String valid) {
-        return memberRepository.existsByNickName(valid);
+        return memberRepository.existsByNickname(valid);
     }
 
     public void delete(final Long memberId) {

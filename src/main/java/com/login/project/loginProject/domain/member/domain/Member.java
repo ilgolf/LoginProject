@@ -13,7 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Member extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique = true, length = 30)
@@ -26,8 +27,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "role_type", length = 15)
     private RoleType roleType;
 
-    @Column(name = "nick_name",unique = true, length = 20)
-    private String nickName;
+    @Column(unique = true, length = 20)
+    private String nickname;
 
     @Column(length = 20)
     private String name;
@@ -35,13 +36,13 @@ public class Member extends BaseTimeEntity {
     private Integer age;
 
     @Builder
-    public Member(String email, String password, RoleType roleType, String nickName, String name, Integer age) {
+    public Member(String email, String password, RoleType roleType, String nickname, String name, Integer age) {
 
         this.email = email;
         this.password = password;
         this.roleType = roleType;
         this.name = name;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.age = age;
     }
 
@@ -49,14 +50,14 @@ public class Member extends BaseTimeEntity {
      * 비즈 니스 로직
      */
     public void update(final Member member) {
-        changeEmail(email);
-        changePassword(password);
-        changeNickName(nickName);
+        changeEmail(member.getEmail());
+        changePassword(member.getPassword());
+        changeNickName(member.getNickname());
     }
 
     private void changeEmail(final String email) { this.email = email; }
 
     private void changePassword(final String password) { this.password = password; }
 
-    private void changeNickName(final String nickName) { this.nickName = nickName; }
+    private void changeNickName(final String nickName) { this.nickname = nickName; }
 }

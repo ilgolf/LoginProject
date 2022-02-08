@@ -22,26 +22,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberServiceTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    MemberService memberService;
-
-    private static Member givenMember;
-
-    @AfterEach
-    void clear() {
-        memberRepository.deleteAll();
-    }
-
-    Member saveMember() {
-        return memberRepository.save(givenMember);
-    }
+    private MemberService memberService;
 
     @Test
     @DisplayName("회원 조회 테스트")
     void readMember() {
         // given
-        givenMember = Member.builder()
+        Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
                 .password("1234")
                 .nickName("Golf")
@@ -50,7 +39,7 @@ class MemberServiceTest {
                 .age(26)
                 .build();
 
-        Member member = saveMember();
+        Member member = memberRepository.save(givenMember);
 
         // when
         MemberResponse response = memberService.findById(member.getId());
@@ -66,7 +55,7 @@ class MemberServiceTest {
     @DisplayName("회원 수정 테스트")
     void updateMember() throws DuplicateMemberException {
         // given
-        givenMember = Member.builder()
+        Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
                 .password("1234")
                 .nickName("Golf")
@@ -75,7 +64,7 @@ class MemberServiceTest {
                 .age(26)
                 .build();
 
-        Member savedMember = saveMember();
+        Member savedMember = memberRepository.save(givenMember);
 
         MemberUpdateDTO updateMember = MemberUpdateDTO.builder()
                 .email("ssar@naver.com")
@@ -84,21 +73,19 @@ class MemberServiceTest {
                 .build();
 
         // when
-        Long updateId = memberService.updateMember(updateMember.toEntity(), savedMember.getId());
-
-        Member member = memberRepository.findById(updateId).orElseGet(Member::new);
+        memberService.updateMember(updateMember.toEntity(), savedMember.getId());
 
         // then
-        assertThat(member.getEmail()).isEqualTo("ssar@naver.com");
-        assertThat(member.getPassword()).isEqualTo("12345");
-        assertThat(member.getNickName()).isEqualTo("Dev.Golf");
+        assertThat(savedMember.getEmail()).isEqualTo("ssar@naver.com");
+        assertThat(savedMember.getPassword()).isEqualTo("12345");
+        assertThat(savedMember.getNickname()).isEqualTo("Dev.Golf");
     }
 
     @Test
     @DisplayName("회원 삭제 테스트")
     void deleteTest() {
         // given
-        givenMember = Member.builder()
+        Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
                 .password("1234")
                 .nickName("Golf")
@@ -107,7 +94,7 @@ class MemberServiceTest {
                 .age(26)
                 .build();
 
-        Member member = saveMember();
+        Member member = memberRepository.save(givenMember);
 
         String userEmail = member.getEmail();
 

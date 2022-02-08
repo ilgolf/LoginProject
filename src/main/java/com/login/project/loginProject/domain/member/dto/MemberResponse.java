@@ -19,7 +19,7 @@ public class MemberResponse {
 
     public MemberResponse(final Member member) {
         this.email = member.getEmail();
-        this.nickName = member.getNickName();
+        this.nickName = member.getNickname();
         this.name = member.getName();
         this.age = member.getAge();
     }
