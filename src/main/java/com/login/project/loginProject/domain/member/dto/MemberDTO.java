@@ -42,7 +42,7 @@ public class MemberDTO {
                 .password(password)
                 .name(name)
                 .roleType(RoleType.USER)
-                .nickName(nickName)
+                .nickname(nickName)
                 .age(age)
                 .build();
     }

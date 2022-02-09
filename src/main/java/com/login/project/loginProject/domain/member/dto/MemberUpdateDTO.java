@@ -34,7 +34,7 @@ public class MemberUpdateDTO {
         return Member.builder()
                 .email(email)
                 .password(password)
-                .nickName(nickName)
+                .nickname(nickName)
                 .build();
     }
 }
