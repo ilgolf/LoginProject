@@ -1,13 +1,12 @@
 package com.login.project.loginProject.domain.auth;
 
-import com.login.project.loginProject.domain.auth.application.MemberService;
+import com.login.project.loginProject.domain.member.application.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
