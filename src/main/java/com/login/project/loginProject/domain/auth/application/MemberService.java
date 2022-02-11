@@ -28,11 +28,11 @@ public class MemberService {
         log.info("{} : 조회 성공!", id);
         Member member = memberRepository.findById(id).orElseGet(Member::new);
 
-        return new MemberResponse(member);
+        return MemberResponse.from(member);
     }
 
     // 회원 가입
-    public MemberResponse signUp(Member requestMember) throws DuplicateMemberException {
+    public Long signUp(Member requestMember) throws DuplicateMemberException {
         if (memberRepository.findByEmail(requestMember.getEmail()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입된 정보입니다.");
         }
@@ -49,9 +49,9 @@ public class MemberService {
                 .roleType(RoleType.USER)
                 .build();
 
-        memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
 
-        return new MemberResponse(member);
+        return savedMember.getId();
     }
 
     public void updateMember(Member update, Long id) throws DuplicateMemberException {
