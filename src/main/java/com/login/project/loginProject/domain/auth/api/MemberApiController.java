@@ -33,7 +33,7 @@ public class MemberApiController {
 
     // 회원 가입 api
     @PostMapping("/join")
-    public ResponseEntity<MemberResponse> register(@Valid @RequestBody MemberDTO memberDTO) throws DuplicateMemberException {
+    public ResponseEntity<Long> register(@Valid @RequestBody MemberDTO memberDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 가입 성공", memberDTO.getEmail());
         Member member = memberDTO.toEntity();
         return new ResponseEntity<>(memberService.signUp(member), HttpStatus.CREATED);
