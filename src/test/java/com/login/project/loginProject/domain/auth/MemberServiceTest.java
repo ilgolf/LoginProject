@@ -32,7 +32,7 @@ class MemberServiceTest {
         Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
                 .password("1234")
-                .nickName("Golf")
+                .nickname("Golf")
                 .name("kim")
                 .roleType(RoleType.USER)
                 .age(26)
@@ -57,7 +57,7 @@ class MemberServiceTest {
         Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
                 .password("1234")
-                .nickName("Golf")
+                .nickname("Golf")
                 .name("kim")
                 .roleType(RoleType.USER)
                 .age(26)
@@ -72,7 +72,7 @@ class MemberServiceTest {
                 .build();
 
         // when
-        memberService.updateMember(updateMember.toEntity(), savedMember.getId());
+        memberService.updateMember(updateMember.toEntity(), savedMember.getEmail());
 
         // then
         assertThat(savedMember.getEmail()).isEqualTo("ssar@naver.com");
@@ -87,7 +87,7 @@ class MemberServiceTest {
         Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
                 .password("1234")
-                .nickName("Golf")
+                .nickname("Golf")
                 .name("kim")
                 .roleType(RoleType.USER)
                 .age(26)
@@ -98,7 +98,7 @@ class MemberServiceTest {
         String userEmail = member.getEmail();
 
         // when
-        memberService.delete(member.getId());
+        memberService.delete(member.getEmail());
 
         // then
         assertThrows(IllegalArgumentException.class, () -> {
