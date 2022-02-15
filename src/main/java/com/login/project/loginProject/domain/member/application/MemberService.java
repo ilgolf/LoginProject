@@ -54,7 +54,7 @@ public class MemberService {
         return savedMember.getId();
     }
 
-    public void updateMember(Member update, Long id) throws DuplicateMemberException {
+    public void updateMember(Member update, String email) throws DuplicateMemberException {
         if (checkDuplicateEmail(update.getEmail())) {
             throw new DuplicateMemberException("이메일이 이미 존재 합니다.");
         }
@@ -63,7 +63,7 @@ public class MemberService {
             throw new DuplicateMemberException("닉네임이 이미 존재 합니다.");
         }
 
-        Member findMember = memberRepository.findById(id).orElseThrow(() -> {
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> {
             throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         });
 
@@ -78,7 +78,7 @@ public class MemberService {
         return memberRepository.existsByNickname(valid);
     }
 
-    public void delete(final Long memberId) {
-        memberRepository.deleteById(memberId);
+    public void delete(final String email) {
+        memberRepository.deleteByEmail(email);
     }
 }

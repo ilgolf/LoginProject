@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,17 +37,18 @@ public class MemberApiController {
         return new ResponseEntity<>(memberService.signUp(member), HttpStatus.CREATED);
     }
 
-    @PutMapping("{memberId}")
-    public ResponseEntity<Void> update(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
+    // 회원 변경
+    @PutMapping
+    public ResponseEntity<Void> update(@AuthenticationPrincipal String email, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 수정", updateDTO.getEmail());
         Member member = updateDTO.toEntity();
-        memberService.updateMember(member, memberId);
+        memberService.updateMember(member, email);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> delete(@PathVariable Long memberId) {
-        memberService.delete(memberId);
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal String email) {
+        memberService.delete(email);
         return ResponseEntity.noContent().build();
     }
 }
