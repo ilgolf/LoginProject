@@ -240,3 +240,32 @@ public class MemberResponse {
 ```
 
 정적 팩토리 메소드는 객체 생성에 명확한 의미를 부여한다. 해당 메소드를 호출할 때마다 무의미한 객체 생성을 하는 것을 막을 수 있습니다. 객체 생성을 캡슐화 하여 내부 구현을 알 필요가 없습니다. 그렇기 때문에 좀 더 객체지향적인 설계에 가까워집니다. 
+
+### 페이징
+
+회원 조회 시 모든 데이터를 다 갖고 오게되면 엄청나게 많은 양의 데이터를 갖고 옵니다. 때문에 stream을 사용하더라도 ResponseDTO에 담아 데이터를 보내주기엔 어려움이 있기 때문에 페이징을 이용하여 데이터의 사이즈를 제한해두고 조회하는 방식을 사용했습니다.
+
+MemberApiController.java
+
+```java
+@GetMapping
+public ResponseEntity<List<MemberResponse>> findAll(
+     @PageableDefault(size = 5, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
+
+     return ResponseEntity.ok(memberService.findAll(pageable));
+}
+```
+
+MemberService.java
+
+```java
+public List<MemberResponse> findAll(Pageable pageable) {
+        Page<Member> findMemberAll = memberRepository.findAll(pageable);
+
+        return findMemberAll.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+    }
+```
+
+`PageableDefault`를 통해 Default page를 정해주고 id(PK) 기준으로 역순(DESC) 정렬하여 화면에 던져 주도록 설정했습니다. 쿼리 스트링을 이용하는 방식보다 좀 더 정확하게 Default 값을 개발자가 정의하여 의도대로 동작할 수 있다고 판단하여 이러하 선택을 했습니다.
