@@ -64,4 +64,23 @@ public class MemberApiController {
 
         return ResponseEntity.ok(memberService.findAll(pageable));
     }
+
+    /**
+     * 페이징 테스트용 로직
+     */
+    @PostConstruct
+    void initializing() throws DuplicateMemberException {
+        for (int i = 0; i < 50; i++) {
+            Member member = Member.builder()
+                    .email("member" + (i + 1) + "@naver.com")
+                    .password("123" + i)
+                    .name("kim" + i)
+                    .nickname("fasdf" + (i + 1))
+                    .age(10 + i)
+                    .roleType(RoleType.USER)
+                    .build();
+
+            memberService.signUp(member);
+        }
+    }
 }

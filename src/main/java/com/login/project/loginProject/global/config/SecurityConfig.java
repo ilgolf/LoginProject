@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/members/join").permitAll()
                 .antMatchers(HttpMethod.POST, "/members/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/members").permitAll() // 페이징 테스트하기 위해 open
                 .anyRequest().authenticated();
 
         http.formLogin().disable();
