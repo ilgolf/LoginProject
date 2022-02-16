@@ -9,9 +9,14 @@ import com.login.project.loginProject.global.error.exception.ErrorCode;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,5 +85,13 @@ public class MemberService {
 
     public void delete(final String email) {
         memberRepository.deleteByEmail(email);
+    }
+
+    public List<MemberResponse> findAll(Pageable pageable) {
+        Page<Member> findMemberAll = memberRepository.findAll(pageable);
+
+        return findMemberAll.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
     }
 }

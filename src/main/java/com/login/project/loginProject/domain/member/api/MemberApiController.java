@@ -2,18 +2,24 @@ package com.login.project.loginProject.domain.member.api;
 
 import com.login.project.loginProject.domain.member.application.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
+import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.MemberDTO;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -50,5 +56,12 @@ public class MemberApiController {
     public ResponseEntity<Void> delete(@AuthenticationPrincipal String email) {
         memberService.delete(email);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemberResponse>> findAll(
+            @PageableDefault(size = 5, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
+
+        return ResponseEntity.ok(memberService.findAll(pageable));
     }
 }
