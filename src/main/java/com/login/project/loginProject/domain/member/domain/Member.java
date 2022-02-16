@@ -20,7 +20,7 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true, length = 30)
     private String email;
 
-    @Column(unique = true, length = 30)
+    @Column(unique = true, length = 120)
     private String password;
 
     @Enumerated(value = EnumType.STRING)
