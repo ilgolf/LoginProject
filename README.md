@@ -265,7 +265,7 @@ public List<MemberResponse> findAll(Pageable pageable) {
         return findMemberAll.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
-    }
+}
 ```
 
 `PageableDefault`를 통해 Default page를 정해주고 id(PK) 기준으로 역순(DESC) 정렬하여 화면에 던져 주도록 설정했습니다. 쿼리 스트링을 이용하는 방식보다 좀 더 정확하게 Default 값을 개발자가 정의하여 의도대로 동작할 수 있다고 판단하여 이러하 선택을 했습니다.
