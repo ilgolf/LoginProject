@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -33,7 +34,7 @@ public class MemberDTO {
     @Size(min = 4, max = 20)
     private String nickName;
 
-    @NotBlank(message = "나이를 입력해주세요")
+    @NotNull(message = "나이를 입력해주세요")
     private Integer age;
 
     public Member toEntity() {
