@@ -21,15 +21,21 @@
 
 
 - Update
-  - path : /members/{id}
+  - path : /members
   - RequestMethod : Put
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
 
 
 - Delete
-  - path : /members/{id}
+  - path : /members
   - RequestMethod : Delete
+  - Success status : 200 OK
+  - fail status : 4xx error, 5xx error
+
+- ReadAll
+  - path : /members
+  - RequestMethod : GET
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
 
