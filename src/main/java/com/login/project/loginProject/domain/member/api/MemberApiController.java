@@ -52,12 +52,14 @@ public class MemberApiController {
         return ResponseEntity.ok().build();
     }
 
+    // 회원 삭제
     @DeleteMapping
     public ResponseEntity<Void> delete(@AuthenticationPrincipal String email) {
         memberService.delete(email);
         return ResponseEntity.noContent().build();
     }
 
+    // 회원 전체 조회
     @GetMapping
     public ResponseEntity<List<MemberResponse>> findAll(
             @PageableDefault(size = 5, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
