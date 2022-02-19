@@ -62,7 +62,7 @@ public class MemberApiController {
     // 회원 전체 조회
     @GetMapping
     public ResponseEntity<List<MemberResponse>> findAll(
-            @PageableDefault(size = 5, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 25, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(memberService.findAll(pageable));
     }
