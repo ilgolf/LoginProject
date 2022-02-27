@@ -62,7 +62,7 @@ public class MemberApiController {
     }
 
     // 회원 전체 조회
-    @GetMapping
+    @GetMapping("/findAll")
     public ResponseEntity<List<MemberResponse>> findAll(
             @PageableDefault(size = 25, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
 
