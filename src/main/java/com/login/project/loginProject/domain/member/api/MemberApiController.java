@@ -46,7 +46,7 @@ public class MemberApiController {
     }
 
     // 회원 변경
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> update(@AuthenticationPrincipal String email, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 수정", updateDTO.getEmail());
         Member member = updateDTO.toEntity();
@@ -62,7 +62,7 @@ public class MemberApiController {
     }
 
     // 회원 전체 조회
-    @GetMapping
+    @GetMapping("/findAll")
     public ResponseEntity<List<MemberResponse>> findAll(
             @PageableDefault(size = 25, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
 
