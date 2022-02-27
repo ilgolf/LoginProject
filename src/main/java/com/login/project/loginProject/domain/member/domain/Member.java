@@ -4,6 +4,7 @@ import com.login.project.loginProject.global.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -49,10 +50,11 @@ public class Member extends BaseTimeEntity {
     /**
      * 비즈 니스 로직
      */
-    public void update(final Member member) {
+    public void update(final Member member, final PasswordEncoder encoder) {
         changeEmail(member.getEmail());
         changePassword(member.getPassword());
         changeNickName(member.getNickname());
+        member.encode(member.getPassword(), encoder);
     }
 
     private void changeEmail(final String email) { this.email = email; }
@@ -60,4 +62,9 @@ public class Member extends BaseTimeEntity {
     private void changePassword(final String password) { this.password = password; }
 
     private void changeNickName(final String nickName) { this.nickname = nickName; }
+
+    public Member encode(final String password, final PasswordEncoder encoder) {
+        encoder.encode(password);
+        return this;
+    }
 }
