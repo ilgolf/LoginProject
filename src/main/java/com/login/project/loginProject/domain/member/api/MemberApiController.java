@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -30,9 +31,9 @@ public class MemberApiController {
     private final MemberService memberService;
 
     // 회원 정보 api
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long id) {
-        return ResponseEntity.ok(memberService.findById(id));
+    @GetMapping
+    public ResponseEntity<MemberResponse> findMember(@AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(memberService.findByEmail(email));
     }
 
     // 회원 가입 api
@@ -40,7 +41,8 @@ public class MemberApiController {
     public ResponseEntity<Long> register(@Valid @RequestBody MemberDTO memberDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 가입 성공", memberDTO.getEmail());
         Member member = memberDTO.toEntity();
-        return new ResponseEntity<>(memberService.signUp(member), HttpStatus.CREATED);
+        URI uri = URI.create("/members");
+        return ResponseEntity.created(uri).body(memberService.signUp(member));
     }
 
     // 회원 변경
@@ -66,6 +68,8 @@ public class MemberApiController {
 
         return ResponseEntity.ok(memberService.findAll(pageable));
     }
+
+
 
     /**
      * 페이징 테스트용 로직

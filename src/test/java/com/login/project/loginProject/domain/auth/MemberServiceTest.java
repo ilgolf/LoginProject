@@ -41,7 +41,7 @@ class MemberServiceTest {
         Member member = memberRepository.save(givenMember);
 
         // when
-        MemberResponse response = memberService.findById(member.getId());
+        MemberResponse response = memberService.findByEmail(member.getEmail());
 
         Member newMember = memberRepository.findByEmail(response.getEmail()).orElseGet(Member::new);
 
