@@ -5,23 +5,26 @@ import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
-public class PrincipalDetailService implements UserDetailsService {
+public class CustomDetailService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
         Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new EmailNotFoundException(ErrorCode.EMAIL_DUPLICATION)
+                () -> new EmailNotFoundException(ErrorCode.MEMBER_NOT_FOUND)
         );
 
-        return new PrincipalDetail(member);
+        log.info("member.email : {}", member.getEmail());
+
+        return CustomUserDetails.from(member);
     }
 }
