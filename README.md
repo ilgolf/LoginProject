@@ -14,7 +14,7 @@
 
 
 - Read
-  - path : /members/findOne
+  - path : /members/findByEmail
   - RequestMethod : Get
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
