@@ -9,7 +9,6 @@ import com.login.project.loginProject.global.error.exception.ErrorCode;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,58 +28,40 @@ public class MemberService {
 
     // 회원 정보
     @Transactional(readOnly = true)
-    public MemberResponse findById(Long id) {
-        log.info("{} : 조회 성공!", id);
-        Member member = memberRepository.findById(id).orElseGet(Member::new);
+    public MemberResponse findByEmail(final String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND)
+        );
 
         return MemberResponse.from(member);
     }
 
     // 회원 가입
-    public Long signUp(Member requestMember) throws DuplicateMemberException {
-        if (memberRepository.findByEmail(requestMember.getEmail()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입된 정보입니다.");
-        }
-
-        String rawPassword = requestMember.getPassword();
-        String encodePassword = encoder.encode(rawPassword);
+    public Long signUp(final Member requestMember) throws DuplicateMemberException {
+        isDuplicate(requestMember);
 
         Member member = Member.builder()
                 .email(requestMember.getEmail())
-                .password(encodePassword)
+                .password(requestMember.getPassword())
                 .name(requestMember.getName())
                 .nickname(requestMember.getNickname())
                 .age(requestMember.getAge())
-                .roleType(RoleType.USER)
-                .build();
+                .roleType(RoleType.USER).build()
+                .encode(requestMember.getPassword(), encoder);
 
         Member savedMember = memberRepository.save(member);
 
         return savedMember.getId();
     }
 
-    public void updateMember(Member update, String email) throws DuplicateMemberException {
-        if (checkDuplicateEmail(update.getEmail())) {
-            throw new DuplicateMemberException("이메일이 이미 존재 합니다.");
-        }
-
-        if (checkDuplicateNickName(update.getNickname())) {
-            throw new DuplicateMemberException("닉네임이 이미 존재 합니다.");
-        }
+    public void updateMember(final Member update, final String email) throws DuplicateMemberException {
+        isDuplicate(update);
 
         Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> {
             throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         });
 
-        findMember.update(update);
-    }
-
-    private boolean checkDuplicateEmail(String valid) {
-        return memberRepository.existsByEmail(valid);
-    }
-
-    private boolean checkDuplicateNickName(String valid) {
-        return memberRepository.existsByNickname(valid);
+        findMember.update(update, encoder);
     }
 
     public void delete(final String email) {
@@ -88,10 +69,17 @@ public class MemberService {
     }
 
     public List<MemberResponse> findAll(Pageable pageable) {
-        Page<Member> findMemberAll = memberRepository.findAll(pageable);
+        List<Member> findMemberAll = memberRepository.findAll(pageable).getContent();
 
         return findMemberAll.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    private void isDuplicate(final Member member) throws DuplicateMemberException {
+        if (memberRepository.existsByEmail(member.getEmail()) ||
+                memberRepository.existsByNickname(member.getNickname())) {
+            throw new DuplicateMemberException("이미 존재하는 닉네임 혹은 이메일입니다.");
+        }
     }
 }

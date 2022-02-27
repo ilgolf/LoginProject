@@ -1,9 +1,12 @@
 package com.login.project.loginProject.global.config;
 
+import com.login.project.loginProject.domain.auth.principal.CustomDetailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,7 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final CustomDetailService detailService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -26,6 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(detailService);
     }
 
     @Override
@@ -46,9 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/members/join").permitAll()
                 .antMatchers(HttpMethod.POST, "/members/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/members").permitAll() // 페이징 테스트하기 위해 open
                 .anyRequest().authenticated();
 
-        http.formLogin().disable();
+        http.formLogin()
+                .and()
+                .httpBasic();
     }
 }
