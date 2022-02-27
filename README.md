@@ -14,7 +14,7 @@
 
 
 - Read
-  - path : /members
+  - path : /members/findByEmail
   - RequestMethod : Get
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
@@ -34,7 +34,7 @@
   - fail status : 4xx error, 5xx error
 
 - ReadAll
-  - path : /members/findAll
+  - path : /members
   - RequestMethod : GET
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
