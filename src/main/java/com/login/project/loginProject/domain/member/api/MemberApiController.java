@@ -41,7 +41,7 @@ public class MemberApiController {
     public ResponseEntity<Long> register(@Valid @RequestBody MemberDTO memberDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 가입 성공", memberDTO.getEmail());
         Member member = memberDTO.toEntity();
-        URI uri = URI.create("/members");
+        URI uri = URI.create("/members/findByEmail");
         return ResponseEntity.created(uri).body(memberService.signUp(member));
     }
 
