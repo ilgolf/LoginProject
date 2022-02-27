@@ -31,7 +31,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     // 회원 정보 api
-    @GetMapping
+    @GetMapping("/findByEmail")
     public ResponseEntity<MemberResponse> findMember(@AuthenticationPrincipal String email) {
         return ResponseEntity.ok(memberService.findByEmail(email));
     }
@@ -62,7 +62,7 @@ public class MemberApiController {
     }
 
     // 회원 전체 조회
-    @GetMapping("/findAll")
+    @GetMapping
     public ResponseEntity<List<MemberResponse>> findAll(
             @PageableDefault(size = 25, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
 
