@@ -21,7 +21,7 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true, length = 30)
     private String email;
 
-    @Column(unique = true, length = 120)
+    @Column(length = 120)
     private String password;
 
     @Enumerated(value = EnumType.STRING)
@@ -52,9 +52,8 @@ public class Member extends BaseTimeEntity {
      */
     public void update(final Member member, final PasswordEncoder encoder) {
         changeEmail(member.getEmail());
-        changePassword(member.getPassword());
         changeNickName(member.getNickname());
-        member.encode(member.getPassword(), encoder);
+        changePassword(encoder.encode(member.getPassword()));
     }
 
     private void changeEmail(final String email) { this.email = email; }
@@ -62,9 +61,4 @@ public class Member extends BaseTimeEntity {
     private void changePassword(final String password) { this.password = password; }
 
     private void changeNickName(final String nickName) { this.nickname = nickName; }
-
-    public Member encode(final String password, final PasswordEncoder encoder) {
-        encoder.encode(password);
-        return this;
-    }
 }

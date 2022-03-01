@@ -42,12 +42,13 @@ public class MemberService {
 
         Member member = Member.builder()
                 .email(requestMember.getEmail())
-                .password(requestMember.getPassword())
                 .name(requestMember.getName())
+                .password(encoder.encode(requestMember.getPassword()))
                 .nickname(requestMember.getNickname())
                 .age(requestMember.getAge())
-                .roleType(RoleType.USER).build()
-                .encode(requestMember.getPassword(), encoder);
+                .roleType(RoleType.USER)
+                .build()
+                ;
 
         Member savedMember = memberRepository.save(member);
 

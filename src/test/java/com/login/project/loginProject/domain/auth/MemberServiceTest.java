@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -20,10 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class MemberServiceTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private MemberService memberService;
+    @Autowired private MemberRepository memberRepository;
+    @Autowired private MemberService memberService;
+    @Autowired private PasswordEncoder encoder;
 
     @Test
     @DisplayName("회원 조회 테스트")
@@ -31,7 +31,7 @@ class MemberServiceTest {
         // given
         Member givenMember = Member.builder()
                 .email("ilgolc@naver.com")
-                .password("1234")
+                .password(encoder.encode("1234"))
                 .nickname("Golf")
                 .name("kim")
                 .roleType(RoleType.USER)
@@ -48,6 +48,10 @@ class MemberServiceTest {
         // then
         assertThat(newMember.getEmail()).isEqualTo("ilgolc@naver.com");
         assertThat(newMember.getAge()).isEqualTo(26);
+        assertAll(
+                () -> assertThat(newMember.getPassword()).isNotEqualTo("1234"),
+                () -> assertThat(encoder.matches("1234", newMember.getPassword())).isTrue()
+        );
     }
 
     @Test
@@ -76,7 +80,7 @@ class MemberServiceTest {
 
         // then
         assertThat(savedMember.getEmail()).isEqualTo("ssar@naver.com");
-        assertThat(savedMember.getPassword()).isEqualTo("12345");
+        assertThat(encoder.matches("12345", savedMember.getPassword())).isTrue();
         assertThat(savedMember.getNickname()).isEqualTo("Dev.Golf");
     }
 
