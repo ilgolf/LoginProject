@@ -1,0 +1,21 @@
+= Spring REST Docs
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+== REQUEST
+
+include::{snippets}/member/created/http-request.adoc[]
+
+== RESPONSE
+
+include::{snippets}/member/created/http-response.adoc[]
+
+== Request Body
+
+include::{snippets}/member/created/request-body.adoc[]
+
+== Response Body
+
+include::{snippets}/member/created/response-body.adoc[]

@@ -1,0 +1,17 @@
+= Spring REST Docs
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+== REQUEST
+
+include::{snippets}/member/findByEmail/http-request.adoc[]
+
+== RESPONSE
+
+include::{snippets}/member/findByEmail/http-response.adoc[]
+
+== Response Body
+
+include::{snippets}/member/findByEmail/response-body.adoc[]
