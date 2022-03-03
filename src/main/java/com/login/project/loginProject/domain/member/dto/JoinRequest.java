@@ -3,6 +3,7 @@ package com.login.project.loginProject.domain.member.dto;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.RoleType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,9 @@ import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class MemberDTO {
+public class JoinRequest {
 
     @NotBlank(message = "이메일을 입력해주세요")
     @Email
@@ -31,7 +33,7 @@ public class MemberDTO {
 
     @NotBlank(message = "별명을 입력해주세요")
     @Size(min = 4, max = 20)
-    private String nickName;
+    private String nickname;
 
     @NotNull(message = "나이를 입력해주세요")
     private Integer age;
@@ -42,7 +44,7 @@ public class MemberDTO {
                 .password(password)
                 .name(name)
                 .roleType(RoleType.USER)
-                .nickname(nickName)
+                .nickname(nickname)
                 .age(age)
                 .build();
     }
