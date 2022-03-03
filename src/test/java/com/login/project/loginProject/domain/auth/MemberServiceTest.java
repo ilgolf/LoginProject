@@ -72,7 +72,7 @@ class MemberServiceTest {
         MemberUpdateDTO updateMember = MemberUpdateDTO.builder()
                 .email("ssar@naver.com")
                 .password("12345")
-                .nickName("Dev.Golf")
+                .nickname("Dev.Golf")
                 .build();
 
         // when
