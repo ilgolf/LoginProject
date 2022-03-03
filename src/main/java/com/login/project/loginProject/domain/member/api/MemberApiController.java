@@ -3,7 +3,7 @@ package com.login.project.loginProject.domain.member.api;
 import com.login.project.loginProject.domain.member.application.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.RoleType;
-import com.login.project.loginProject.domain.member.dto.MemberDTO;
+import com.login.project.loginProject.domain.member.dto.JoinRequest;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class MemberApiController {
 
     // 회원 가입 api
     @PostMapping("/join")
-    public ResponseEntity<Long> register(@Valid @RequestBody MemberDTO memberDTO) throws DuplicateMemberException {
+    public ResponseEntity<String> register(@Valid @RequestBody JoinRequest memberDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 가입 성공", memberDTO.getEmail());
         Member member = memberDTO.toEntity();
         URI uri = URI.create("/members/findByEmail");

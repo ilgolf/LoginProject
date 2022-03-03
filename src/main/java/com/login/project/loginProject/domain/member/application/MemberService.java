@@ -37,7 +37,7 @@ public class MemberService {
     }
 
     // 회원 가입
-    public Long signUp(final Member requestMember) throws DuplicateMemberException {
+    public String signUp(final Member requestMember) throws DuplicateMemberException {
         isDuplicate(requestMember);
 
         Member member = Member.builder()
@@ -52,7 +52,7 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
 
-        return savedMember.getId();
+        return savedMember.getEmail();
     }
 
     public void updateMember(final Member update, final String email) throws DuplicateMemberException {
