@@ -137,32 +137,6 @@ public class GlobalException {
 }
 ```
 
-4차 fix.
-
-현재 @PathVariable을 통해 회원 id를 받아와 그 값을 토대로 회원 수정과 삭제를 하고 있었습니다. 하지만 이는 공격에 취약점이 될 수 있습니다. 예를 들어 상대방의 memberId가 노출이 쉽고 그 상태로 누군가 접속을 시도한다면 그대로 접속이 이루어져 쉽게 변경이나 삭제를 할 수 있을 것입니다. 그렇기 때문에 내부에 SecurityContext에 존재하는 회원 정보를 갖고오는게 맞다고 판단 @AuthenticationPrincipal로 인증된 사용자의 정보를 갖고 오게 됩니다. 
-
-이는 저희가 로그인 시 loadByUsername을 통하여 생성된 principal 객체로서 비교적 PathVariable에 비해 안전합니다. 
-
-ex) 회원 수정 Controller
-```java
- // 회원 변경
-    @PutMapping
-    public ResponseEntity<Void> update(@AuthenticationPrincipal String email, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
-        log.debug("{} : 회원 수정", updateDTO.getEmail());
-        Member member = updateDTO.toEntity();
-        memberService.updateMember(member, email);
-        return ResponseEntity.ok().build();
-    }
-
-```
-
-보시다 싶이 AuthencationPrincipal로 인증된 사용자의 email을 Context로부터 받아오게 끔 설계하여 외부로 부터 공개되지도 않는 이점이 있습니다.(Path에 아무런 정보도 남지 않았다.)
-
-
-5차 fix.
-
-
-
 
 2. ResponseError
 
@@ -186,6 +160,56 @@ public class ResponseError {
     }
 }
 ```
+
+4차 fix.
+
+현재 @PathVariable을 통해 회원 id를 받아와 그 값을 토대로 회원 수정과 삭제를 하고 있었습니다. 하지만 이는 공격에 취약점이 될 수 있습니다. 예를 들어 상대방의 memberId가 노출이 쉽고 그 상태로 누군가 접속을 시도한다면 그대로 접속이 이루어져 쉽게 변경이나 삭제를 할 수 있을 것입니다. 그렇기 때문에 내부에 SecurityContext에 존재하는 회원 정보를 갖고오는게 맞다고 판단 @AuthenticationPrincipal로 인증된 사용자의 정보를 갖고 오게 됩니다. 
+
+이는 저희가 로그인 시 loadByUsername을 통하여 생성된 principal 객체로서 비교적 PathVariable에 비해 안전합니다. 
+
+ex) 회원 수정 Controller
+```java
+ // 회원 변경
+    @PutMapping
+    public ResponseEntity<Void> update(@AuthenticationPrincipal String email, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
+        log.debug("{} : 회원 수정", updateDTO.getEmail());
+        Member member = updateDTO.toEntity();
+        memberService.updateMember(member, email);
+        return ResponseEntity.ok().build();
+    }
+
+```
+
+보시다 싶이 AuthencationPrincipal로 인증된 사용자의 email을 Context로부터 받아오게 끔 설계하여 외부로 부터 공개되지도 않는 이점이 있습니다.(Path에 아무런 정보도 남지 않았다.)
+
+5차 fix.
+
+PUT은 값 자체를 덮어 씌워 업데이트 시 문제가 발생할 수 있습니다. 
+
+ex. 기존 데이터name : "kim", age : 23
+
+|메서드 |변경 데이터|               변경 후|
+|------|----------|---------------------|
+|PUT   |age : 20  |name : null, age : 20| 
+|PATCH |age : 20  |name : kim, age : 20 |
+
+데이터가 실수로 가지 않더라도 위 표 처럼 PATCH는 필요한 데이터만 변경하여 더욱 안전하기 때문에 PUT에서 발생한 문제를 해결하기 위해 PATCH를 사용했습니다.
+
+6차 fix.
+
+회원 조회 기능에서 회원이 없다면 빈 객체를 던지는 것이 아닌 예외를 발생시켜야 하는데 예외가 아닌 빈 객체를 던저주고 있었습니다. 
+
+문제의 원인은 다음 코드였습니다.
+
+```java
+@Transactional(readOnly = true)
+public MemberResponse findByEmail(String email) {
+  return memberRepository.findByEmail(email).orElseGet(Member::new);
+}
+```
+
+orElseGet으로 null 일 때에는 새로운 Member 객체를 만들어 빈 객체로 던져 주고 있었습니다. 빈 객체보다 예외를 발생시켜 무엇이 잘못되었는지 명확하게 전달해주어야 클라이언트와 
+개발자 모두에게 명확한 원인을 알 수 있게 해줍니다.
 
 
 ## 특별한 패턴 적용
