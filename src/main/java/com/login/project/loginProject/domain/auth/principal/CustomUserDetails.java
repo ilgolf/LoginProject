@@ -41,7 +41,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        log.debug("CustomDetails.Email : {} ", email);
         return this.email;
     }
 
