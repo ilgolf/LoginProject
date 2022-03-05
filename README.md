@@ -204,12 +204,26 @@ ex. 기존 데이터name : "kim", age : 23
 ```java
 @Transactional(readOnly = true)
 public MemberResponse findByEmail(String email) {
-  return memberRepository.findByEmail(email).orElseGet(Member::new);
+  Member memmber = memberRepository.findByEmail(email).orElseGet(Member::new);
+  
+  return MemberResponse.from(member);
 }
 ```
 
 orElseGet으로 null 일 때에는 새로운 Member 객체를 만들어 빈 객체로 던져 주고 있었습니다. 빈 객체보다 예외를 발생시켜 무엇이 잘못되었는지 명확하게 전달해주어야 클라이언트와 
 개발자 모두에게 명확한 원인을 알 수 있게 해줍니다.
+
+```java
+@Transactional(readOnly = true)
+public MemberResponse findByEmail(final String email) {
+  Member member = memberRepository.findByEmail(email).orElseThrow(
+       () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+  return MemberResponse.from(member);
+}
+```
+
+다음 코드 처럼 orElseThrow() 메서드를 사용하여 명확하게 회원이 없다는 오류를 클라이언트와 개발자에게 전달하고 있습니다. 이렇게 설계 했을 때 문제 발생 시 명확하게 알 수 있습니다.
 
 
 ## 특별한 패턴 적용
