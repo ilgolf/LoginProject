@@ -226,6 +226,7 @@ public MemberResponse findByEmail(final String email) {
 다음 코드 처럼 orElseThrow() 메서드를 사용하여 명확하게 회원이 없다는 오류를 클라이언트와 개발자에게 전달하고 있습니다. 이렇게 설계 했을 때 문제 발생 시 명확하게 알 수 있습니다.
 
 
+
 ## 특별한 패턴 적용
 
 ### 빌더 패턴
