@@ -30,8 +30,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberResponse findByEmail(final String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND)
-        );
+                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberResponse.from(member);
     }
@@ -47,8 +46,7 @@ public class MemberService {
                 .nickname(requestMember.getNickname())
                 .age(requestMember.getAge())
                 .roleType(RoleType.USER)
-                .build()
-                ;
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -58,9 +56,8 @@ public class MemberService {
     public void updateMember(final Member update, final String email) throws DuplicateMemberException {
         isDuplicate(update);
 
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> {
-            throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
-        });
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(
+                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         findMember.update(update, encoder);
     }
