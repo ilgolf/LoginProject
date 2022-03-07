@@ -1,4 +1,4 @@
-package com.login.project.loginProject.domain.auth;
+package com.login.project.loginProject.domain.member.application;
 
 import com.login.project.loginProject.domain.member.application.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
@@ -6,7 +6,11 @@ import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
+import com.login.project.loginProject.domain.member.exception.MemberNotFoundException;
+import com.login.project.loginProject.domain.member.util.GivenMember;
+import com.login.project.loginProject.global.error.exception.ErrorCode;
 import javassist.bytecode.DuplicateMemberException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.login.project.loginProject.domain.member.util.GivenMember.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,36 +26,33 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class MemberServiceTest {
 
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private MemberService memberService;
-    @Autowired private PasswordEncoder encoder;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Test
     @DisplayName("회원 조회 테스트")
     void readMember() {
         // given
-        Member givenMember = Member.builder()
-                .email("ilgolc@naver.com")
-                .password(encoder.encode("1234"))
-                .nickname("Golf")
-                .name("kim")
-                .roleType(RoleType.USER)
-                .age(26)
-                .build();
+        Member givenMember = toEntity(encoder);
 
         Member member = memberRepository.save(givenMember);
 
         // when
         MemberResponse response = memberService.findByEmail(member.getEmail());
 
-        Member newMember = memberRepository.findByEmail(response.getEmail()).orElseGet(Member::new);
+        Member newMember = memberRepository.findByEmail(response.getEmail()).orElseThrow(
+                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         // then
-        assertThat(newMember.getEmail()).isEqualTo("ilgolc@naver.com");
-        assertThat(newMember.getAge()).isEqualTo(26);
+        assertThat(newMember.getEmail()).isEqualTo(GIVEN_EMAIL);
+        assertThat(newMember.getAge()).isEqualTo(GIVEN_AGE);
         assertAll(
-                () -> assertThat(newMember.getPassword()).isNotEqualTo("1234"),
-                () -> assertThat(encoder.matches("1234", newMember.getPassword())).isTrue()
+                () -> assertThat(newMember.getPassword()).isNotEqualTo(GIVEN_PASSWORD),
+                () -> assertThat(encoder.matches(GIVEN_PASSWORD, newMember.getPassword())).isTrue()
         );
     }
 
@@ -58,14 +60,7 @@ class MemberServiceTest {
     @DisplayName("회원 수정 테스트")
     void updateMember() throws DuplicateMemberException {
         // given
-        Member givenMember = Member.builder()
-                .email("ilgolc@naver.com")
-                .password("1234")
-                .nickname("Golf")
-                .name("kim")
-                .roleType(RoleType.USER)
-                .age(26)
-                .build();
+        Member givenMember = toEntity(encoder);
 
         Member savedMember = memberRepository.save(givenMember);
 
@@ -88,14 +83,7 @@ class MemberServiceTest {
     @DisplayName("회원 삭제 테스트")
     void deleteTest() {
         // given
-        Member givenMember = Member.builder()
-                .email("ilgolc@naver.com")
-                .password("1234")
-                .nickname("Golf")
-                .name("kim")
-                .roleType(RoleType.USER)
-                .age(26)
-                .build();
+        Member givenMember = toEntity(encoder);
 
         Member member = memberRepository.save(givenMember);
 
@@ -105,11 +93,9 @@ class MemberServiceTest {
         memberService.delete(member.getEmail());
 
         // then
-        assertThrows(IllegalArgumentException.class, () -> {
-                    memberRepository.findByEmail(userEmail).orElseThrow(
-                            () -> new IllegalArgumentException("잘못된 접근입니다.")
-                    );
-                }
+        assertThrows(IllegalArgumentException.class,
+                () -> memberRepository.findByEmail(userEmail).orElseThrow(
+                        () -> new IllegalArgumentException("잘못된 접근입니다."))
         );
     }
 }
