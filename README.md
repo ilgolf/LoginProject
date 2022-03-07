@@ -6,7 +6,7 @@
 
 ## [API SPEC](https://github.com/ilgolf/LoginProject/blob/main/src/docs/description/ApiSpec.md)
 
-## RestAPI 설계
+## RestAPI 설계(간략)
 
 - Create
   - path : /members/join
