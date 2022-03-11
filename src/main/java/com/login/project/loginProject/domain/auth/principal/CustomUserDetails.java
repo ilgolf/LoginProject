@@ -11,32 +11,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-@Getter
 @Slf4j
 public class CustomUserDetails implements UserDetails {
 
-    private final Long id;
     private final String email;
-    private final String nickname;
-    private final String name;
-    private final Integer age;
+    private final String password;
+    private final RoleType role;
 
-    private CustomUserDetails(Long id, String email, String nickname, String name, Integer age) {
-        this.id = id;
+    private CustomUserDetails(String email, String password, RoleType role) {
         this.email = email;
-        this.nickname = nickname;
-        this.name = name;
-        this.age = age;
+        this.password = password;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + RoleType.USER));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + this.role));
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override
@@ -64,8 +59,7 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    public static CustomUserDetails from(final Member member) {
-        return new CustomUserDetails(member.getId(), member.getEmail(), member.getNickname(),
-                member.getName(), member.getAge());
+    public static CustomUserDetails createDetails(final Member member) {
+        return new CustomUserDetails(member.getEmail(), member.getPassword(), member.getRoleType());
     }
 }
