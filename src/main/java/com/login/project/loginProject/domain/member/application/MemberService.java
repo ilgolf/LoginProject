@@ -10,6 +10,10 @@ import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder encoder;
+    private final AuthenticationManagerBuilder managerBuilder;
 
     // 회원 정보
     @Transactional(readOnly = true)
@@ -60,6 +65,10 @@ public class MemberService {
                 () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         findMember.update(update, encoder);
+
+        Authentication authenticate = managerBuilder.getObject().authenticate
+                (new UsernamePasswordAuthenticationToken(update.getEmail(), update.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
     }
 
     public void delete(final String email) {
