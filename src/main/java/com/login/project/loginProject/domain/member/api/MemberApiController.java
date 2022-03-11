@@ -9,11 +9,16 @@ import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +33,7 @@ import java.util.List;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final AuthenticationManagerBuilder managerBuilder;
 
     // 회원 정보 api
     @GetMapping("/findByEmail")
@@ -48,8 +54,8 @@ public class MemberApiController {
     @PatchMapping
     public ResponseEntity<Void> update(@AuthenticationPrincipal String email, @Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 수정", updateDTO.getEmail());
-        Member member = updateDTO.toEntity();
-        memberService.updateMember(member, email);
+        memberService.updateMember(updateDTO.toEntity(), email);
+
         return ResponseEntity.ok().build();
     }
 
