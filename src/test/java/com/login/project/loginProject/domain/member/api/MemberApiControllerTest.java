@@ -1,6 +1,7 @@
 package com.login.project.loginProject.domain.member.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.login.project.loginProject.domain.member.WithAuthUser;
 import com.login.project.loginProject.domain.member.application.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.dto.JoinRequest;
@@ -70,7 +71,7 @@ class MemberApiControllerTest {
 
     @Test
     @DisplayName("회원 이메일로 조회 컨트롤러")
-    @WithMockUser(username = "ssar@naver.com", roles = "USER")
+    @WithAuthUser
     void findByEmail() throws Exception {
 
         Member member = Member.builder()
@@ -97,7 +98,7 @@ class MemberApiControllerTest {
 
     @Test
     @DisplayName("회원 수정 컨트롤러")
-    @WithMockUser(username = "ssar@naver.com", roles = "USER")
+    @WithAuthUser
     void update() throws Exception {
         MemberUpdateDTO updateDTO = MemberUpdateDTO.builder()
                 .email("ilgolc@naver.com")
@@ -121,7 +122,7 @@ class MemberApiControllerTest {
 
     @Test
     @DisplayName("회원 삭제 컨트롤러")
-    @WithMockUser(username = "ssar@naver.com", roles = "USER")
+    @WithAuthUser
     void deleteTest() throws Exception {
         mockMvc.perform(delete("/members"))
                 .andExpect(status().isNoContent())
