@@ -1,9 +1,7 @@
 package com.login.project.loginProject.domain.member.domain;
 
 import com.login.project.loginProject.global.common.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
@@ -11,7 +9,9 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue
@@ -34,18 +34,7 @@ public class Member extends BaseTimeEntity {
     @Column(length = 20)
     private String name;
 
-    private Integer age;
-
-    @Builder
-    public Member(String email, String password, RoleType roleType, String nickname, String name, Integer age) {
-
-        this.email = email;
-        this.password = password;
-        this.roleType = roleType;
-        this.name = name;
-        this.nickname = nickname;
-        this.age = age;
-    }
+    private int age = 0;
 
     /**
      * 비즈 니스 로직
