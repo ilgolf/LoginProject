@@ -1,6 +1,5 @@
 package com.login.project.loginProject.domain.member.api;
 
-import com.login.project.loginProject.domain.auth.principal.CustomUserDetails;
 import com.login.project.loginProject.domain.member.application.MemberService;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.RoleType;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +32,12 @@ public class MemberApiController {
     // 회원 정보 api
     @GetMapping("/findByEmail")
     public ResponseEntity<MemberResponse> findMember() {
-        String email = getEmail();
         return ResponseEntity.ok(memberService.findByEmail(getEmail()));
     }
 
     // 회원 가입 api
     @PostMapping("/join")
-    public ResponseEntity<String> register(@Valid @RequestBody JoinRequest memberDTO) throws DuplicateMemberException {
+    public ResponseEntity<String> register(@Valid @RequestBody final JoinRequest memberDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 가입 성공", memberDTO.getEmail());
         Member member = memberDTO.toEntity();
         URI uri = URI.create("/members/findByEmail");
@@ -49,7 +46,8 @@ public class MemberApiController {
 
     // 회원 변경
     @PatchMapping
-    public ResponseEntity<Void> update(@Valid @RequestBody MemberUpdateDTO updateDTO) throws DuplicateMemberException {
+    public ResponseEntity<Void> update(
+            @Valid @RequestBody final MemberUpdateDTO updateDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 수정", updateDTO.getEmail());
         memberService.updateMember(updateDTO.toEntity(), getEmail());
         return ResponseEntity.ok().build();
@@ -68,6 +66,12 @@ public class MemberApiController {
             @PageableDefault(size = 25, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(memberService.findAll(pageable));
+    }
+
+    // 회원 검색
+    @GetMapping("/{name}")
+    public ResponseEntity<List<MemberResponse>> searchMember(@PathVariable final String name) {
+        return ResponseEntity.ok(memberService.searchMember(name));
     }
 
     private String getEmail() {

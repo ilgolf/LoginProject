@@ -1,5 +1,6 @@
 package com.login.project.loginProject.domain.member.application;
 
+import com.login.project.loginProject.domain.auth.exception.NoSuchMemberException;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
@@ -10,10 +11,6 @@ import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +26,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder encoder;
-    private final AuthenticationManagerBuilder managerBuilder;
 
     // 회원 정보
     @Transactional(readOnly = true)
@@ -61,14 +57,10 @@ public class MemberService {
     public void updateMember(final Member update, final String email) throws DuplicateMemberException {
         isDuplicate(update);
 
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(
-                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         findMember.update(update, encoder);
-
-        Authentication authenticate = managerBuilder.getObject().authenticate
-                (new UsernamePasswordAuthenticationToken(update.getEmail(), update.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
     }
 
     public void delete(final String email) {
@@ -88,5 +80,14 @@ public class MemberService {
                 memberRepository.existsByNickname(member.getNickname())) {
             throw new DuplicateMemberException("이미 존재하는 닉네임 혹은 이메일입니다.");
         }
+    }
+
+    public List<MemberResponse> searchMember(final String name) {
+        List<Member> members = memberRepository.findByName(name).orElseThrow(
+                () -> new NoSuchMemberException(ErrorCode.NO_SUCH_MEMBER));
+
+        return members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
     }
 }
