@@ -8,4 +8,11 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithAuthUserSecurityContextFactory.class)
 public @interface WithAuthUser {
+
+    long id() default 1L;
+    String email() default "ilgolc@naver.com";
+    String password() default "123456789";
+    String name() default "ssar";
+    String nickname() default "kim";
+    int age() default 23;
 }
