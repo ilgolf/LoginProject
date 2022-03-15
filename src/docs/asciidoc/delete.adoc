@@ -6,8 +6,8 @@ endif::[]
 
 == REQUEST
 
-include::{snippets}/members/delete/http-request.adoc[]
+include::{snippets}/member/delete/http-request.adoc[]
 
 == RESPONSE
 
-include::{snippets}/members/delete/http-response.adoc[]
+include::{snippets}/member/delete/http-response.adoc[]

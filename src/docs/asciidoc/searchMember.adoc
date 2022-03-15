@@ -11,3 +11,7 @@ include::{snippets}/member/searchMember/http-request.adoc[]
 == RESPONSE
 
 include::{snippets}/member/searchMember/http-response.adoc[]
+
+== RESPONSE BODY
+
+include::{snippets}/member/searchMember/response-body.adoc[]
