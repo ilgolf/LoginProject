@@ -11,16 +11,18 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@NotBlank(message = "필수 값입니다.")
 public class MemberUpdateDTO {
 
     @Email(message = "이메일 형식이 아닙니다.")
+    @NotBlank(message = "필수 값입니다.")
     @Size(min = 10, max = 30)
     private String email;
 
+    @NotBlank(message = "필수 값입니다.")
     @Size(min = 8, max = 30)
     private String password;
 
+    @NotBlank(message = "필수 값입니다.")
     @Size(min = 4, max = 20)
     private String nickname;
 

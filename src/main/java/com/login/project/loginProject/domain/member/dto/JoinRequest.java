@@ -1,5 +1,6 @@
 package com.login.project.loginProject.domain.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.RoleType;
 import lombok.*;
@@ -12,19 +13,22 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NotBlank(message = "필수 값입니다.")
 public class JoinRequest {
 
+    @NotBlank(message = "필수 값입니다.")
     @Email
     @Size(min = 5, max = 30)
     private String email;
 
+    @NotBlank(message = "필수 값입니다.")
     @Size(min = 8, max = 30)
     private String password;
 
+    @NotBlank(message = "필수 값입니다.")
     @Size(min = 3, max = 10)
     private String name;
 
+    @NotBlank(message = "필수 값입니다.")
     @Size(min = 4, max = 20)
     private String nickname;
 
