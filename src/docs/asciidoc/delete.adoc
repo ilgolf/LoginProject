@@ -1,4 +1,4 @@
-= Spring REST Docs
+= Spring REST Docs - Delete
 
 ifndef::snippets[]
 :snippets: ./build/generated-snippets

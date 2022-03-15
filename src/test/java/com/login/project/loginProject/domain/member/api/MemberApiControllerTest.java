@@ -122,7 +122,22 @@ class MemberApiControllerTest {
     void deleteTest() throws Exception {
         mockMvc.perform(delete("/members"))
                 .andExpect(status().isNoContent())
-                .andDo(document("members/delete"))
+                .andDo(document("member/delete"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원 전체 조회 테스트")
+    @WithAuthUser
+    void findAllTest() throws Exception {
+        List<MemberResponse> members = List.of(MemberResponse.from(toEntityNoEncoder()));
+
+        when(memberService.findAll(any())).thenReturn(members);
+
+        mockMvc.perform(get("/members")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("/member/memberAll"))
                 .andDo(print());
     }
 
@@ -137,6 +152,7 @@ class MemberApiControllerTest {
         mockMvc.perform(get("/members/{name}", GIVEN_NAME)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(document("member/searchMember"))
                 .andDo(print());
     }
 }
