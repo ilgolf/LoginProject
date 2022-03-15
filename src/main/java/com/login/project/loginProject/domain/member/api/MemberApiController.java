@@ -30,13 +30,13 @@ public class MemberApiController {
     private final MemberService memberService;
 
     // 회원 정보 api
-    @GetMapping("/findByEmail")
+    @GetMapping("/email")
     public ResponseEntity<MemberResponse> findMember() {
         return ResponseEntity.ok(memberService.findByEmail(getEmail()));
     }
 
     // 회원 가입 api
-    @PostMapping("/join")
+    @PostMapping
     public ResponseEntity<String> register(@Valid @RequestBody final JoinRequest memberDTO) throws DuplicateMemberException {
         log.debug("{} : 회원 가입 성공", memberDTO.getEmail());
         Member member = memberDTO.toEntity();
@@ -70,8 +70,10 @@ public class MemberApiController {
 
     // 회원 검색
     @GetMapping("/{name}")
-    public ResponseEntity<List<MemberResponse>> searchMember(@PathVariable final String name) {
-        return ResponseEntity.ok(memberService.searchMember(name));
+    public ResponseEntity<List<MemberResponse>> searchMember(
+            @PathVariable final String name,
+            @PageableDefault(size = 25, sort = "id",direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(memberService.searchMember(name, pageable));
     }
 
     private String getEmail() {
