@@ -1,6 +1,5 @@
 package com.login.project.loginProject.domain.member.application;
 
-import com.login.project.loginProject.domain.auth.exception.NoSuchMemberException;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.domain.RoleType;
@@ -82,9 +81,8 @@ public class MemberService {
         }
     }
 
-    public List<MemberResponse> searchMember(final String name) {
-        List<Member> members = memberRepository.findByName(name).orElseThrow(
-                () -> new NoSuchMemberException(ErrorCode.NO_SUCH_MEMBER));
+    public List<MemberResponse> searchMember(final String name, final Pageable pageable) {
+        List<Member> members = memberRepository.findByNameContaining(name, pageable);
 
         return members.stream()
                 .map(MemberResponse::from)

@@ -7,6 +7,7 @@ import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.dto.JoinRequest;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
+import com.login.project.loginProject.domain.member.util.GivenMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static com.login.project.loginProject.domain.member.util.GivenMember.*;
 import static org.mockito.Mockito.*;
@@ -55,7 +58,7 @@ class MemberApiControllerTest {
 
         when(memberService.signUp(any())).thenReturn("ssar@naver.com");
 
-        mockMvc.perform(post("/members/join").content(body)
+        mockMvc.perform(post("/members").content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(document("member/created",
@@ -72,20 +75,13 @@ class MemberApiControllerTest {
     @Test
     @DisplayName("회원 이메일로 조회 컨트롤러")
     @WithAuthUser
-    void findByIdTest() throws Exception {
-        Member member = Member.builder()
-                .email(GIVEN_EMAIL)
-                .nickname(GIVEN_NICKNAME)
-                .name(GIVEN_NAME)
-                .age(GIVEN_AGE)
-                .build();
+    void findByEmail() throws Exception {
+        when(memberService.findByEmail(any())).thenReturn(MemberResponse.from(toEntityNoEncoder()));
 
-        when(memberService.findByEmail(any())).thenReturn(MemberResponse.from(member));
-
-        mockMvc.perform(get("/members/findByEmail")
+        mockMvc.perform(get("/members/email")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("member/findByEmail",
+                .andDo(document("member/findOne",
                         responseFields(
                                 fieldWithPath("email").description("회원 이메일"),
                                 fieldWithPath("name").description("회원 이름"),
@@ -125,7 +121,37 @@ class MemberApiControllerTest {
     void deleteTest() throws Exception {
         mockMvc.perform(delete("/members"))
                 .andExpect(status().isNoContent())
-                .andDo(document("members/delete"))
+                .andDo(document("member/delete"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원 전체 조회 테스트")
+    @WithAuthUser
+    void findAllTest() throws Exception {
+        List<MemberResponse> members = List.of(MemberResponse.from(toEntityNoEncoder()));
+
+        when(memberService.findAll(any())).thenReturn(members);
+
+        mockMvc.perform(get("/members")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("/member/memberAll"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원 검색 컨트롤러 테스트")
+    @WithAuthUser
+    void searchTest() throws Exception {
+        List<MemberResponse> members = List.of(MemberResponse.from(toEntityNoEncoder()));
+
+        when(memberService.searchMember(any(), any())).thenReturn(members);
+
+        mockMvc.perform(get("/members/{name}", GIVEN_NAME)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("member/searchMember"))
                 .andDo(print());
     }
 }

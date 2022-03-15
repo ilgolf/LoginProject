@@ -5,16 +5,21 @@ import com.login.project.loginProject.domain.member.domain.MemberRepository;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import com.login.project.loginProject.domain.member.exception.MemberNotFoundException;
-import com.login.project.loginProject.global.error.exception.ErrorCode;
 import javassist.bytecode.DuplicateMemberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.login.project.loginProject.domain.member.util.GivenMember.*;
+import static com.login.project.loginProject.global.error.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,7 +46,7 @@ class MemberServiceTest {
         MemberResponse response = memberService.findByEmail(member.getEmail());
 
         Member newMember = memberRepository.findByEmail(response.getEmail()).orElseThrow(
-                () -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+                () -> new MemberNotFoundException(MEMBER_NOT_FOUND));
 
         // then
         assertThat(newMember.getEmail()).isEqualTo(GIVEN_EMAIL);
@@ -93,5 +98,35 @@ class MemberServiceTest {
                 () -> memberRepository.findByEmail(userEmail).orElseThrow(
                         () -> new IllegalArgumentException("잘못된 접근입니다."))
         );
+    }
+
+    @Test
+    @DisplayName("회원 전체 조회")
+    void findAllTest() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
+
+        // when
+        List<MemberResponse> members = memberService.findAll(pageable);
+
+        // then
+        assertThat(members.size()).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("회원 검색 조회")
+    void searchTest() {
+        // given
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
+
+        // when
+        List<MemberResponse> members = memberService.searchMember("kim", pageable);
+
+        // then
+        assertThat(members.size()).isEqualTo(10);
+
+        for (MemberResponse member : members) {
+            System.out.println("member.getName() = " + member.getName());
+        }
     }
 }

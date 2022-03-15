@@ -1,0 +1,13 @@
+= Spring REST Docs - search
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+== REQUEST
+
+include::{snippets}/member/searchMember/http-request.adoc[]
+
+== RESPONSE
+
+include::{snippets}/member/searchMember/http-response.adoc[]
