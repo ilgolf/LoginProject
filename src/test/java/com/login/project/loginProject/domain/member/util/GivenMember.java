@@ -23,4 +23,15 @@ public class GivenMember {
                 .age(GIVEN_AGE)
                 .build();
     }
+
+    public static Member toEntityNoEncoder() {
+        return Member.builder()
+                .email(GIVEN_EMAIL)
+                .password(GIVEN_PASSWORD)
+                .nickname(GIVEN_NICKNAME)
+                .name(GIVEN_NAME)
+                .roleType(RoleType.USER)
+                .age(GIVEN_AGE)
+                .build();
+    }
 }
