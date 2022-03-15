@@ -15,9 +15,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.login.project.loginProject.domain.member.util.GivenMember.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -72,13 +72,12 @@ class MemberApiControllerTest {
     @Test
     @DisplayName("회원 이메일로 조회 컨트롤러")
     @WithAuthUser
-    void findByEmail() throws Exception {
-
+    void findByIdTest() throws Exception {
         Member member = Member.builder()
-                .email("ssar@naver.com")
-                .nickname("ssar")
-                .name("ssar")
-                .age(23)
+                .email(GIVEN_EMAIL)
+                .nickname(GIVEN_NICKNAME)
+                .name(GIVEN_NAME)
+                .age(GIVEN_AGE)
                 .build();
 
         when(memberService.findByEmail(any())).thenReturn(MemberResponse.from(member));
