@@ -17,8 +17,7 @@ public enum ErrorCode {
     // 유저 예외
     EMAIL_DUPLICATION(400, "M001", "이미 존재하는 이메일 입니다."),
     LOGIN_INPUT_INVALID(401, "M002", "이메일과 아이디를 확인해주세요"),
-    MEMBER_NOT_FOUND(400, "M003", "존재하지 않은 회원입니다."),
-    NO_SUCH_MEMBER(400, "M004", "해당 이름의 회원이 존재하지 않습니다.");
+    MEMBER_NOT_FOUND(400, "M003", "존재하지 않은 회원입니다.");
 
     private final String code;
     private final String message;
