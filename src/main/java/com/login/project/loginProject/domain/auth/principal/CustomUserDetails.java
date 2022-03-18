@@ -13,6 +13,8 @@ import java.util.Collections;
 @Slf4j
 public class CustomUserDetails implements UserDetails {
 
+    private final long serialVersionUID = 1L;
+
     private final String email;
     private final String password;
     private final RoleType role;
