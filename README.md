@@ -4,19 +4,21 @@
 
 아무생각 없이 api를 만들게 되고 기능 구현에만 목적을 둔 개발을 멈추고 싶었습니다. 그래서 본 프로젝트에서는 불필요한 부분을 걷어내고 효과 적인 코드를 짜는데 집중하고, RESTful 규약을 이해하고 RestFul한 설계를 경험하기 위해 시작했습니다.
 
-## [API SPEC](https://github.com/ilgolf/LoginProject/blob/main/src/docs/description/ApiSpec.md)
+## [Wiki](https://github.com/ilgolf/LoginProject/wiki)
+
+----------------------------------------------------------------------------------
 
 ## RestAPI 설계(간략)
 
 - Create
-  - path : /members/join
+  - path : /members
   - RequestMethod : Post
   - Success status : 201 Created
   - fail status : 4xx error, 5xx error
 
 
 - Read
-  - path : /members/findByEmail
+  - path : /members/email
   - RequestMethod : Get
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
@@ -32,7 +34,7 @@
 - Delete
   - path : /members
   - RequestMethod : Delete
-  - Success status : 200 OK
+  - Success status : 204 noContent
   - fail status : 4xx error, 5xx error
 
 - ReadAll
@@ -40,9 +42,6 @@
   - RequestMethod : GET
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
-
-
-## [fix record](https://github.com/ilgolf/LoginProject/blob/main/src/docs/description/fix.md)
 
 ## 특별한 패턴 적용
 
