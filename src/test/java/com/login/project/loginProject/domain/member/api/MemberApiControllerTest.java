@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.login.project.loginProject.domain.member.util.GivenMember.*;
@@ -51,7 +52,7 @@ class MemberApiControllerTest {
                 .password("123456789")
                 .name("ssar")
                 .nickname("ssss")
-                .age(23)
+                .birth(LocalDate.of(1999, 10, 25))
                 .build();
 
         String body = objectMapper.writeValueAsString(memberDTO);
@@ -66,8 +67,8 @@ class MemberApiControllerTest {
                                 fieldWithPath("email").description("회원 이메일"),
                                 fieldWithPath("password").description("회원 비밀번호"),
                                 fieldWithPath("name").description("회원 이름"),
-                                fieldWithPath("nickname").description("회원 별칭"),
-                                fieldWithPath("age").description("회원 나이")
+                                fieldWithPath("birth").description("회원 생년월일"),
+                                fieldWithPath("nickname").description("회원 별칭")
                         )))
                 .andDo(print());
     }
