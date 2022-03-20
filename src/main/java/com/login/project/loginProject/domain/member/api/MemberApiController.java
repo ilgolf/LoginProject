@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -91,7 +92,7 @@ public class MemberApiController {
                     .password("123" + i)
                     .name("kim" + i)
                     .nickname("fasdf" + (i + 1))
-                    .age(10 + i)
+                    .birth(LocalDate.of(1970 + (i + 1), 5, 1))
                     .roleType(RoleType.USER)
                     .build();
 

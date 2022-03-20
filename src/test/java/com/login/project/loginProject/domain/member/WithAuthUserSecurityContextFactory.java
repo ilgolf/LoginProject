@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class WithAuthUserSecurityContextFactory implements WithSecurityContextFactory<WithAuthUser> {
@@ -22,7 +23,7 @@ public class WithAuthUserSecurityContextFactory implements WithSecurityContextFa
                 .name(annotation.name())
                 .roleType(RoleType.USER)
                 .nickname(annotation.nickname())
-                .age(annotation.age())
+                .birth(LocalDate.of(1999, 10, 25))
                 .build();
 
         List<GrantedAuthority> role =

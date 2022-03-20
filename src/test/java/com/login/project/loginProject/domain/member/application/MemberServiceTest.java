@@ -50,7 +50,7 @@ class MemberServiceTest {
 
         // then
         assertThat(newMember.getEmail()).isEqualTo(GIVEN_EMAIL);
-        assertThat(newMember.getAge()).isEqualTo(GIVEN_AGE);
+        assertThat(newMember.getBirth()).isEqualTo(GIVEN_BIRTH);
         assertAll(
                 () -> assertThat(newMember.getPassword()).isNotEqualTo(GIVEN_PASSWORD),
                 () -> assertThat(encoder.matches(GIVEN_PASSWORD, newMember.getPassword())).isTrue()
@@ -94,10 +94,7 @@ class MemberServiceTest {
         memberService.delete(member.getEmail());
 
         // then
-        assertThrows(IllegalArgumentException.class,
-                () -> memberRepository.findByEmail(userEmail).orElseThrow(
-                        () -> new IllegalArgumentException("잘못된 접근입니다."))
-        );
+        assertThat(memberRepository.findByEmail(userEmail).isPresent()).isFalse();
     }
 
     @Test

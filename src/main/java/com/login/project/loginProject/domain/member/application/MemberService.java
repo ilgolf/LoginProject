@@ -46,7 +46,7 @@ public class MemberService {
                 .name(requestMember.getName())
                 .password(encoder.encode(requestMember.getPassword()))
                 .nickname(requestMember.getNickname())
-                .age(requestMember.getAge())
+                .birth(requestMember.getBirth())
                 .roleType(RoleType.USER)
                 .build();
 

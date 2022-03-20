@@ -1,5 +1,6 @@
 package com.login.project.loginProject.domain.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.RoleType;
@@ -7,7 +8,9 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +28,7 @@ public class JoinRequest {
     private String password;
 
     @NotBlank(message = "필수 값입니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z]*$")
     @Size(min = 3, max = 10)
     private String name;
 
@@ -32,7 +36,10 @@ public class JoinRequest {
     @Size(min = 4, max = 20)
     private String nickname;
 
-    private int age;
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "dd-MM-yyyy")
+    private LocalDate birth;
 
     public Member toEntity() {
         return Member.builder()
@@ -41,7 +48,7 @@ public class JoinRequest {
                 .name(name)
                 .roleType(RoleType.USER)
                 .nickname(nickname)
-                .age(age)
+                .birth(birth)
                 .build();
     }
 }

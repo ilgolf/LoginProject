@@ -6,12 +6,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue
@@ -34,11 +33,36 @@ public class Member extends BaseTimeEntity {
     @Column(length = 20)
     private String name;
 
-    private int age = 0;
+    private LocalDate birth;
+
+    private int age;
+
+    @Builder
+    protected Member(final Long id, final String email, final String password, RoleType roleType,
+                  final String nickname, final String name, final LocalDate birth) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.roleType = roleType;
+        this.nickname = nickname;
+        this.name = name;
+        this.birth = birth;
+        this.age = addAge(birth);
+    }
+
+    public Member(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
 
     /**
      * 비즈 니스 로직
      */
+    public static Member createMember(final String email, final String password, final String nickname) {
+        return new Member(email, password, nickname);
+    }
+
     public void update(final Member member, final PasswordEncoder encoder) {
         changeEmail(member.getEmail());
         changeNickName(member.getNickname());
@@ -50,4 +74,11 @@ public class Member extends BaseTimeEntity {
     private void changePassword(final String password) { this.password = password; }
 
     private void changeNickName(final String nickName) { this.nickname = nickName; }
+
+    private int addAge(final LocalDate birth) {
+        int memberYear = birth.getYear();
+        int nowYear = LocalDate.now().getYear();
+
+        return nowYear - memberYear;
+    }
 }

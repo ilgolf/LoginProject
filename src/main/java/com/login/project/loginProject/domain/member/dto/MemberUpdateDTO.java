@@ -27,10 +27,6 @@ public class MemberUpdateDTO {
     private String nickname;
 
     public Member toEntity() {
-        return Member.builder()
-                .email(email)
-                .password(password)
-                .nickname(nickname)
-                .build();
+        return Member.createMember(email, password, nickname);
     }
 }
