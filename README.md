@@ -43,6 +43,13 @@
   - Success status : 200 OK
   - fail status : 4xx error, 5xx error
 
+- Search
+  - path : /members/{name}
+  - RequestMethod : GET
+  - Success status : 200 OK
+  - fail status : 4xx error, 5xx error
+  
+
 ## 특별한 패턴 적용
 
 ### 빌더 패턴
