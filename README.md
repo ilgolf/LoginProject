@@ -50,7 +50,7 @@
   - fail status : 4xx error, 5xx error
   
 
-## 특별한 패턴 적용
+## 프로젝트를 하며 배운 코드
 
 ### 빌더 패턴
 
