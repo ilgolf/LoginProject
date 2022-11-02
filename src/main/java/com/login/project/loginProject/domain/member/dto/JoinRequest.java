@@ -36,9 +36,7 @@ public class JoinRequest {
     @Size(min = 4, max = 20)
     private String nickname;
 
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
     public Member toEntity() {
