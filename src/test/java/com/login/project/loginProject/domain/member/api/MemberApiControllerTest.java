@@ -137,7 +137,7 @@ class MemberApiControllerTest {
         mockMvc.perform(get("/members")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("/member/memberAll"))
+                .andDo(document("member/memberAll"))
                 .andDo(print());
     }
 
