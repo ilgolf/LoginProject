@@ -2,10 +2,12 @@ package com.login.project.loginProject.domain.member.application;
 
 import com.login.project.loginProject.domain.member.domain.Member;
 import com.login.project.loginProject.domain.member.domain.MemberRepository;
+import com.login.project.loginProject.domain.member.domain.RoleType;
 import com.login.project.loginProject.domain.member.dto.MemberResponse;
 import com.login.project.loginProject.domain.member.dto.MemberUpdateDTO;
 import com.login.project.loginProject.domain.member.exception.MemberNotFoundException;
 import javassist.bytecode.DuplicateMemberException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.login.project.loginProject.domain.member.util.GivenMember.*;
@@ -33,6 +36,22 @@ class MemberServiceTest {
     private MemberService memberService;
     @Autowired
     private PasswordEncoder encoder;
+
+    @BeforeEach
+    void init() throws DuplicateMemberException {
+        for (int i = 100; i < 150; i++) {
+            Member member = Member.builder()
+                    .email("member" + (i + 1) + "@naver.com")
+                    .password("123" + i)
+                    .name("kim" + i)
+                    .nickname("fasdf" + (i + 1))
+                    .birth(LocalDate.of(1970 + (i + 1), 5, 1))
+                    .roleType(RoleType.USER)
+                    .build();
+
+            memberService.signUp(member);
+        }
+    }
 
     @Test
     @DisplayName("회원 조회 테스트")
